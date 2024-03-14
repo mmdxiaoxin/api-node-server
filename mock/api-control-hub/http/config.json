@@ -1,0 +1,266 @@
+{
+  "code": 200,
+  "data": function({
+    _req,
+    Mock
+  }) {
+    let query = _req.body;
+    if (query.apiId == "111") {
+      return ({
+        "name": "接口1",
+        "requestMethod": "POST",
+        "apiUrl": "https://api.example.com/data",
+        "authType": "No Auth",
+        "queryParams": [{
+            "key": "param1",
+            "value": "value1",
+            "description": "Parameter 1"
+          },
+          {
+            "key": "param2",
+            "value": "value2",
+            "description": "Parameter 2"
+          }
+        ],
+        "queryHeaders": [{
+          "key": "Authorization",
+          "value": "Bearer token123",
+          "description": "Authorization Header"
+        }],
+        "queryBodyForm": [{
+            "key": "formParam1",
+            "value": "formValue1",
+            "description": "Form Parameter 1"
+          },
+          {
+            "key": "formParam2",
+            "value": "formValue2",
+            "description": "Form Parameter 2"
+          }
+        ],
+        "queryBodyFormX": [{
+            "key": "formXParam1",
+            "value": "formXValue1",
+            "description": "FormX Parameter 1"
+          },
+          {
+            "key": "formXParam2",
+            "value": "formXValue2",
+            "description": "FormX Parameter 2"
+          }
+        ],
+        "queryJsonBody": "{\"key\": \"value\"}",
+        "queryXmlBody": "<xml><key>value</key></xml>",
+        "queryRawBody": "Raw Body Content",
+        "creator": "John Doe",
+        "createTime": "2023-01-01T12:00:00Z",
+        "updateTime": "2023-01-02T15:30:00Z"
+      })
+    } else if (query.apiId == "112") {
+      return ({
+        "name": "接口2",
+        "requestMethod": "POST",
+        "apiUrl": "https://api.example.com/data",
+        "authType": "No Auth",
+        "queryParams": [{
+            "key": "param1",
+            "value": "value1",
+            "description": "Parameter 1"
+          },
+          {
+            "key": "param2",
+            "value": "value2",
+            "description": "Parameter 2"
+          }
+        ],
+        "queryHeaders": [{
+          "key": "Authorization",
+          "value": "Bearer token123",
+          "description": "Authorization Header"
+        }],
+        "queryBodyForm": [{
+            "key": "formParam1",
+            "value": "formValue1",
+            "description": "Form Parameter 1"
+          },
+          {
+            "key": "formParam2",
+            "value": "formValue2",
+            "description": "Form Parameter 2"
+          }
+        ],
+        "queryBodyFormX": [{
+            "key": "formXParam1",
+            "value": "formXValue1",
+            "description": "FormX Parameter 1"
+          },
+          {
+            "key": "formXParam2",
+            "value": "formXValue2",
+            "description": "FormX Parameter 2"
+          }
+        ],
+        "queryJsonBody": "{\"key\": \"value\"}",
+        "queryXmlBody": "<xml><key>value</key></xml>",
+        "queryRawBody": "Raw Body Content",
+        "creator": "John Doe",
+        "createTime": "2023-01-01T12:00:00Z",
+        "updateTime": "2023-01-02T15:30:00Z"
+      })
+    } else if (query.apiId == "113") {
+      return ({
+        "name": "接口3",
+        "requestMethod": "POST",
+        "apiUrl": "https://api.example.com/data",
+        "authType": "No Auth",
+        "queryParams": [{
+            "key": "param1",
+            "value": "value1",
+            "description": "Parameter 1"
+          },
+          {
+            "key": "param2",
+            "value": "value2",
+            "description": "Parameter 2"
+          }
+        ],
+        "queryHeaders": [{
+          "key": "Authorization",
+          "value": "Bearer token123",
+          "description": "Authorization Header"
+        }],
+        "queryBodyForm": [{
+            "key": "formParam1",
+            "value": "formValue1",
+            "description": "Form Parameter 1"
+          },
+          {
+            "key": "formParam2",
+            "value": "formValue2",
+            "description": "Form Parameter 2"
+          }
+        ],
+        "queryBodyFormX": [{
+            "key": "formXParam1",
+            "value": "formXValue1",
+            "description": "FormX Parameter 1"
+          },
+          {
+            "key": "formXParam2",
+            "value": "formXValue2",
+            "description": "FormX Parameter 2"
+          }
+        ],
+        "queryJsonBody": "{\"key\": \"value\"}",
+        "queryXmlBody": "<xml><key>value</key></xml>",
+        "queryRawBody": "Raw Body Content",
+        "creator": "John Doe",
+        "createTime": "2023-01-01T12:00:00Z",
+        "updateTime": "2023-01-02T15:30:00Z"
+      })
+    } else if (query.apiId == "114") {
+      return ({
+        "name": "接口4",
+        "requestMethod": "POST",
+        "apiUrl": "https://api.example.com/data",
+        "authType": "No Auth",
+        "queryParams": [{
+            "key": "param1",
+            "value": "value1",
+            "description": "Parameter 1"
+          },
+          {
+            "key": "param2",
+            "value": "value2",
+            "description": "Parameter 2"
+          }
+        ],
+        "queryHeaders": [{
+          "key": "Authorization",
+          "value": "Bearer token123",
+          "description": "Authorization Header"
+        }],
+        "queryBodyForm": [{
+            "key": "formParam1",
+            "value": "formValue1",
+            "description": "Form Parameter 1"
+          },
+          {
+            "key": "formParam2",
+            "value": "formValue2",
+            "description": "Form Parameter 2"
+          }
+        ],
+        "queryBodyFormX": [{
+            "key": "formXParam1",
+            "value": "formXValue1",
+            "description": "FormX Parameter 1"
+          },
+          {
+            "key": "formXParam2",
+            "value": "formXValue2",
+            "description": "FormX Parameter 2"
+          }
+        ],
+        "queryJsonBody": "{\"key\": \"value\"}",
+        "queryXmlBody": "<xml><key>value</key></xml>",
+        "queryRawBody": "Raw Body Content",
+        "creator": "John Doe",
+        "createTime": "2023-01-01T12:00:00Z",
+        "updateTime": "2023-01-02T15:30:00Z"
+      })
+    } else if (query.apiId == "115") {
+      return ({
+        "name": "接口5",
+        "requestMethod": "POST",
+        "apiUrl": "https://api.example.com/data",
+        "authType": "No Auth",
+        "queryParams": [{
+            "key": "param1",
+            "value": "value1",
+            "description": "Parameter 1"
+          },
+          {
+            "key": "param2",
+            "value": "value2",
+            "description": "Parameter 2"
+          }
+        ],
+        "queryHeaders": [{
+          "key": "Authorization",
+          "value": "Bearer token123",
+          "description": "Authorization Header"
+        }],
+        "queryBodyForm": [{
+            "key": "formParam1",
+            "value": "formValue1",
+            "description": "Form Parameter 1"
+          },
+          {
+            "key": "formParam2",
+            "value": "formValue2",
+            "description": "Form Parameter 2"
+          }
+        ],
+        "queryBodyFormX": [{
+            "key": "formXParam1",
+            "value": "formXValue1",
+            "description": "FormX Parameter 1"
+          },
+          {
+            "key": "formXParam2",
+            "value": "formXValue2",
+            "description": "FormX Parameter 2"
+          }
+        ],
+        "queryJsonBody": "{\"key\": \"value\"}",
+        "queryXmlBody": "<xml><key>value</key></xml>",
+        "queryRawBody": "Raw Body Content",
+        "creator": "John Doe",
+        "createTime": "2023-01-01T12:00:00Z",
+        "updateTime": "2023-01-02T15:30:00Z"
+      })
+    }
+  },
+  "msg": "成功获取"
+}

@@ -1,0 +1,34 @@
+# 忽略 node_modules 文件夹，因为通常不应该将依赖库添加到版本控制中
+node_modules/
+
+# 忽略 IDE 或编辑器生成的文件
+.vscode/
+.idea/
+
+# 忽略 npm 包的锁定文件
+package-lock.json
+
+# 忽略 Mac OS X 系统文件
+.DS_Store
+
+# 忽略自动生成的日志文件
+logs/
+*.log
+
+# 忽略运行时生成的文件或文件夹
+/build/
+/dist/
+
+# 忽略配置文件中包含敏感信息的文件
+.env
+.env.*
+
+# 忽略其他的临时文件或者不需要的文件
+*.bak
+*.swp
+*.tmp
+*.temp
+
+# 忽略自动生成的文档
+doc/
+docs/

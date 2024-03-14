@@ -1,0 +1,15 @@
+{
+  "code": 200,
+  "data": [{
+      mockLabel: "启用",
+      mockStatus: 1,
+      tagType: "success"
+    },
+    {
+      mockLabel: "关闭",
+      mockStatus: 0,
+      tagType: "danger"
+    }
+  ],
+  "msg": "成功"
+}

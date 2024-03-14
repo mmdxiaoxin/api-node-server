@@ -1,0 +1,25 @@
+{
+  "code": 200,
+  "data": function({
+    _req
+  }) {
+    let header = _req.header;
+    if (header['x-access-token'] === 'bqddxxwqmfncffacvbpkuxvwvqrhln') {
+      return {
+        "useProTable": ["add", "batchAdd", "export", "batchDelete", "status"],
+        "mockServer": ["add", "batchAdd", "export", "batchDelete", "status", "import", "delete"],
+        "authButton": ["add", "edit", "delete", "import", "export"],
+        "mySpace": ["add", "batchAdd", "export", "batchDelete", "status", "import", "delete"],
+      }
+    }
+    if (header['x-access-token'] === 'unufvdotdqxuzfbdygovfmsbftlvbn') {
+      return {
+        "useProTable": ["add", "batchDelete"],
+        "mockServer": ["add", "batchAdd", "export", "batchDelete", "status", "import", "delete"],
+        "authButton": ["add", "edit", "delete", "import", "export"],
+        "mySpace": ["add", "batchAdd", "export", "batchDelete", "status", "import", "delete"],
+      }
+    }
+  },
+  "msg": "成功"
+}

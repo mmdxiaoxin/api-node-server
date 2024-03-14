@@ -1,0 +1,86 @@
+{
+  "code": 200,
+  "data": function({
+    _req,
+    Mock
+  }) {
+    let query = _req.body;
+    if (query.mockMethod || query.mockURL || query.mockDescription || query.mockStatus || query.status !== undefined) {
+      return Mock.mock({
+        "list|10": [{
+          "id": "@string(number,18)",
+          "mockMethod": query.mockMethod ? query.mockMethod : "@pick(['GET', 'POST', 'DELETE', 'PUT'])",
+          "mockURL": query.mockURL ? query.mockURL : "/" + "@word(5, 18)",
+          "mockDescription": "@city(true)",
+          "mockmockCreateTime": "@date @time",
+          "mockStatus": query.status !== undefined ? query.status : "@integer(0, 1)",
+          "mockContent": "@word(5, 168)"
+        }],
+        "pageNum": Number(query.pageNum),
+        "pageSize": Number(query.pageSize),
+        "total": 18
+      })
+    } else if (query.pageSize == 25) {
+      return Mock.mock({
+        "list|25": [{
+          "id": "@string(number,18)",
+          "mockMethod": query.mockMethod ? query.mockMethod : "@pick(['GET', 'POST', 'DELETE', 'PUT'])",
+          "mockURL": query.mockURL ? query.mockURL : "/" + "@word(5, 18)",
+          "mockDescription": "@city(true)",
+          "mockmockCreateTime": "@date @time",
+          "mockStatus": query.status !== undefined ? query.status : "@integer(0, 1)",
+          "mockContent": "@word(5, 168)"
+        }],
+        "pageNum": Number(query.pageNum),
+        "pageSize": Number(query.pageSize),
+        "total": 2000
+      })
+    } else if (query.pageSize == 50) {
+      return Mock.mock({
+        "list|50": [{
+          "id": "@string(number,18)",
+          "mockMethod": query.mockMethod ? query.mockMethod : "@pick(['GET', 'POST', 'DELETE', 'PUT'])",
+          "mockURL": query.mockURL ? query.mockURL : "/" + "@word(5, 18)",
+          "mockDescription": "@city(true)",
+          "mockCreateTime": "@date @time",
+          "mockStatus": query.status !== undefined ? query.status : "@integer(0, 1)",
+          "mockContent": "@word(5, 168)"
+        }],
+        "pageNum": Number(query.pageNum),
+        "pageSize": Number(query.pageSize),
+        "total": 2000
+      })
+    } else if (query.pageSize == 100) {
+      return Mock.mock({
+        "list|100": [{
+          "id": "@string(number,18)",
+          "mockMethod": query.mockMethod ? query.mockMethod : "@pick(['GET', 'POST', 'DELETE', 'PUT'])",
+          "mockURL": query.mockURL ? query.mockURL : "/" + "@word(5, 18)",
+          "mockDescription": "@city(true)",
+          "mockCreateTime": "@date @time",
+          "mockStatus": query.status !== undefined ? query.status : "@integer(0, 1)",
+          "mockContent": "@word(5, 168)"
+        }],
+        "pageNum": Number(query.pageNum),
+        "pageSize": Number(query.pageSize),
+        "total": 2000
+      })
+    } else {
+      return Mock.mock({
+        "list|10": [{
+          "id": "@string(number,18)",
+          "mockMethod": query.mockMethod ? query.mockMethod : "@pick(['GET', 'POST', 'DELETE', 'PUT'])",
+          "mockURL": query.mockURL ? query.mockURL : "/" + "@word(5, 18)",
+          "mockDescription": "@city(true)",
+          "mockCreateTime": "@date @time",
+          "mockStatus": query.status !== undefined ? query.status : "@integer(0, 1)",
+          "mockContent": "@word(5, 168)"
+        }],
+        "pageNum": Number(query.pageNum),
+        "pageSize": Number(query.pageSize),
+        "total": 2000
+      })
+    }
+  },
+  "msg": "成功"
+}
