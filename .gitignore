@@ -1,10 +1,6 @@
 # 忽略 node_modules 文件夹，因为通常不应该将依赖库添加到版本控制中
 node_modules/
 
-# 忽略 IDE 或编辑器生成的文件
-.vscode/
-.idea/
-
 # 忽略 npm 包的锁定文件
 package-lock.json
 
