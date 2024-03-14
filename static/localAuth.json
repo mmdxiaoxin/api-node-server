@@ -1,0 +1,16 @@
+{
+  "buttons": {
+    "admin": {
+      "useProTable": ["add", "batchAdd", "export", "batchDelete", "status"],
+      "mockServer": ["add", "batchAdd", "export", "batchDelete", "status", "import", "delete"],
+      "authButton": ["add", "edit", "delete", "import", "export"],
+      "mySpace": ["add", "batchAdd", "export", "batchDelete", "status", "import", "delete"]
+    },
+    "user": {
+        "useProTable": ["add", "batchAdd", "export", "batchDelete", "status"],
+        "mockServer": ["add", "batchAdd", "export", "batchDelete", "status", "import", "delete"],
+        "authButton": ["add", "edit", "delete", "import", "export"],
+        "mySpace": ["add", "batchAdd", "export", "batchDelete", "status", "import", "delete"]
+    }
+  }
+}

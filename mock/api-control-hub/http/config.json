@@ -52,7 +52,7 @@
         "queryJsonBody": "{\"key\": \"value\"}",
         "queryXmlBody": "<xml><key>value</key></xml>",
         "queryRawBody": "Raw Body Content",
-        "creator": "John Doe",
+        "creator": "小新ai",
         "createTime": "2023-01-01T12:00:00Z",
         "updateTime": "2023-01-02T15:30:00Z"
       })
@@ -60,206 +60,102 @@
       return ({
         "name": "接口2",
         "requestMethod": "POST",
-        "apiUrl": "https://api.example.com/data",
+        "apiUrl": "https://mock.presstime.cn/mock/6534b86affb279f23e01859d/api-control-hub/http/collection/list",
         "authType": "No Auth",
-        "queryParams": [{
-            "key": "param1",
-            "value": "value1",
-            "description": "Parameter 1"
-          },
-          {
-            "key": "param2",
-            "value": "value2",
-            "description": "Parameter 2"
-          }
-        ],
-        "queryHeaders": [{
-          "key": "Authorization",
-          "value": "Bearer token123",
-          "description": "Authorization Header"
-        }],
-        "queryBodyForm": [{
-            "key": "formParam1",
-            "value": "formValue1",
-            "description": "Form Parameter 1"
-          },
-          {
-            "key": "formParam2",
-            "value": "formValue2",
-            "description": "Form Parameter 2"
-          }
-        ],
-        "queryBodyFormX": [{
-            "key": "formXParam1",
-            "value": "formXValue1",
-            "description": "FormX Parameter 1"
-          },
-          {
-            "key": "formXParam2",
-            "value": "formXValue2",
-            "description": "FormX Parameter 2"
-          }
-        ],
-        "queryJsonBody": "{\"key\": \"value\"}",
-        "queryXmlBody": "<xml><key>value</key></xml>",
-        "queryRawBody": "Raw Body Content",
-        "creator": "John Doe",
+        "queryParams": [],
+        "queryHeaders": [],
+        "queryBodyForm": [],
+        "queryBodyFormX": [],
+        "queryJsonBody": "{\"projectName\": \"testName\"}",
+        "queryXmlBody": "",
+        "queryRawBody": "",
+        "creator": "小新ai",
         "createTime": "2023-01-01T12:00:00Z",
         "updateTime": "2023-01-02T15:30:00Z"
       })
     } else if (query.apiId == "113") {
       return ({
         "name": "接口3",
-        "requestMethod": "POST",
-        "apiUrl": "https://api.example.com/data",
+        "requestMethod": "GET",
+        "apiUrl": "https://mock.presstime.cn/mock/6534b86affb279f23e01859d/api-control-hub",
         "authType": "No Auth",
-        "queryParams": [{
-            "key": "param1",
-            "value": "value1",
-            "description": "Parameter 1"
-          },
-          {
-            "key": "param2",
-            "value": "value2",
-            "description": "Parameter 2"
-          }
-        ],
-        "queryHeaders": [{
-          "key": "Authorization",
-          "value": "Bearer token123",
-          "description": "Authorization Header"
-        }],
-        "queryBodyForm": [{
-            "key": "formParam1",
-            "value": "formValue1",
-            "description": "Form Parameter 1"
-          },
-          {
-            "key": "formParam2",
-            "value": "formValue2",
-            "description": "Form Parameter 2"
-          }
-        ],
-        "queryBodyFormX": [{
-            "key": "formXParam1",
-            "value": "formXValue1",
-            "description": "FormX Parameter 1"
-          },
-          {
-            "key": "formXParam2",
-            "value": "formXValue2",
-            "description": "FormX Parameter 2"
-          }
-        ],
-        "queryJsonBody": "{\"key\": \"value\"}",
-        "queryXmlBody": "<xml><key>value</key></xml>",
-        "queryRawBody": "Raw Body Content",
-        "creator": "John Doe",
+        "queryParams": [],
+        "queryHeaders": [],
+        "queryBodyForm": [],
+        "queryBodyFormX": [],
+        "queryJsonBody": "",
+        "queryXmlBody": "",
+        "queryRawBody": "",
+        "creator": "小新ai",
         "createTime": "2023-01-01T12:00:00Z",
         "updateTime": "2023-01-02T15:30:00Z"
       })
     } else if (query.apiId == "114") {
-      return ({
+      return {
         "name": "接口4",
         "requestMethod": "POST",
-        "apiUrl": "https://api.example.com/data",
+        "apiUrl": "https://mock.presstime.cn/mock/6534b86affb279f23e01859d/api-control-hub",
         "authType": "No Auth",
         "queryParams": [{
-            "key": "param1",
-            "value": "value1",
-            "description": "Parameter 1"
-          },
-          {
-            "key": "param2",
-            "value": "value2",
-            "description": "Parameter 2"
-          }
-        ],
+          "key": "param3",
+          "value": "value3",
+          "description": "Parameter 3"
+        }],
         "queryHeaders": [{
-          "key": "Authorization",
-          "value": "Bearer token123",
-          "description": "Authorization Header"
+          "key": "Custom-Header",
+          "value": "HeaderValue4",
+          "description": "Custom Header for Interface 4"
         }],
         "queryBodyForm": [{
-            "key": "formParam1",
-            "value": "formValue1",
-            "description": "Form Parameter 1"
-          },
-          {
-            "key": "formParam2",
-            "value": "formValue2",
-            "description": "Form Parameter 2"
-          }
-        ],
+          "key": "formParam3",
+          "value": "formValue3",
+          "description": "Form Parameter 3"
+        }],
         "queryBodyFormX": [{
-            "key": "formXParam1",
-            "value": "formXValue1",
-            "description": "FormX Parameter 1"
-          },
-          {
-            "key": "formXParam2",
-            "value": "formXValue2",
-            "description": "FormX Parameter 2"
-          }
-        ],
-        "queryJsonBody": "{\"key\": \"value\"}",
-        "queryXmlBody": "<xml><key>value</key></xml>",
-        "queryRawBody": "Raw Body Content",
-        "creator": "John Doe",
+          "key": "formXParam3",
+          "value": "formXValue3",
+          "description": "FormX Parameter 3"
+        }],
+        "queryJsonBody": "{\"key\": \"value3\"}",
+        "queryXmlBody": "<xml><key>value3</key></xml>",
+        "queryRawBody": "Raw Body Content for Interface 4",
+        "creator": "小新ai",
         "createTime": "2023-01-01T12:00:00Z",
         "updateTime": "2023-01-02T15:30:00Z"
-      })
+      };
     } else if (query.apiId == "115") {
-      return ({
+      return {
         "name": "接口5",
         "requestMethod": "POST",
-        "apiUrl": "https://api.example.com/data",
+        "apiUrl": "https://mock.presstime.cn/mock/6534b86affb279f23e01859d/api-control-hub",
         "authType": "No Auth",
         "queryParams": [{
-            "key": "param1",
-            "value": "value1",
-            "description": "Parameter 1"
-          },
-          {
-            "key": "param2",
-            "value": "value2",
-            "description": "Parameter 2"
-          }
-        ],
+          "key": "param4",
+          "value": "value4",
+          "description": "Parameter 4"
+        }],
         "queryHeaders": [{
-          "key": "Authorization",
-          "value": "Bearer token123",
-          "description": "Authorization Header"
+          "key": "Custom-Header",
+          "value": "HeaderValue5",
+          "description": "Custom Header for Interface 5"
         }],
         "queryBodyForm": [{
-            "key": "formParam1",
-            "value": "formValue1",
-            "description": "Form Parameter 1"
-          },
-          {
-            "key": "formParam2",
-            "value": "formValue2",
-            "description": "Form Parameter 2"
-          }
-        ],
+          "key": "formParam4",
+          "value": "formValue4",
+          "description": "Form Parameter 4"
+        }],
         "queryBodyFormX": [{
-            "key": "formXParam1",
-            "value": "formXValue1",
-            "description": "FormX Parameter 1"
-          },
-          {
-            "key": "formXParam2",
-            "value": "formXValue2",
-            "description": "FormX Parameter 2"
-          }
-        ],
-        "queryJsonBody": "{\"key\": \"value\"}",
-        "queryXmlBody": "<xml><key>value</key></xml>",
-        "queryRawBody": "Raw Body Content",
-        "creator": "John Doe",
+          "key": "formXParam4",
+          "value": "formXValue4",
+          "description": "FormX Parameter 4"
+        }],
+        "queryJsonBody": "{\"key\": \"value4\"}",
+        "queryXmlBody": "<xml><key>value4</key></xml>",
+        "queryRawBody": "Raw Body Content for Interface 5",
+        "creator": "小新ai",
         "createTime": "2023-01-01T12:00:00Z",
         "updateTime": "2023-01-02T15:30:00Z"
-      })
+      };
     }
   },
   "msg": "成功获取"
