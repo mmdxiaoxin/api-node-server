@@ -17,14 +17,14 @@ const httpRoutes = require('./routes/httpRoutes');
 app.use(express.json());
 
 // 挂载路由模块
-app.use('/user', userRoutes);
-app.use('/project', projectRoutes);
-app.use('/mock', mockRoutes);
-app.use('/http', httpRoutes);
+app.use('/api-control-hub/user', userRoutes);
+app.use('/api-control-hub/project', projectRoutes);
+app.use('/api-control-hub/mock', mockRoutes);
+app.use('/api-control-hub/http', httpRoutes);
 
 
 // 注册
-app.post('/register', (req, res) => {
+app.post('/api-control-hub/register', (req, res) => {
     // 实现用户注册的逻辑
     res.json({
         code: 200, msg: '退出登录成功'
@@ -32,24 +32,22 @@ app.post('/register', (req, res) => {
 });
 
 // 用户菜单
-app.get('/menu/list', (req, res) => {
+app.get('/api-control-hub/menu/list', (req, res) => {
     // 实现获取用户菜单的逻辑
     let accessToken = req.headers['x-access-token'];
-    let mockData = {};
+    let mockData = [];
     if (accessToken === 'bqddxxwqmfncffacvbpkuxvwvqrhln') {
-        mockData = {
-            code: 200, data: localMenu.admin, msg: '获取菜单成功'
-        }
-    } else if (accessToken === 'unufvdotdqxuzfbdygovfmsbftlvbn') {
-        mockData = {
-            code: 200, data: localMenu.user, msg: '获取菜单成功'
-        }
+        mockData = localMenu.admin;
+    } else {
+        mockData = localMenu.user;
     }
-    res.json(mockData);
+    res.json({
+        code: 200, data: mockData, msg: '获取用户菜单成功'
+    });
 });
 
 // 退出登录
-app.post('/logout', (req, res) => {
+app.post('/api-control-hub/logout', (req, res) => {
     // 实现退出登录的逻辑
     res.json({
         code: 200, msg: '退出登录成功'
@@ -57,10 +55,9 @@ app.post('/logout', (req, res) => {
 });
 
 // 用户登录
-app.post('/login', (req, res) => {
+app.post('/api-control-hub/login', (req, res) => {
     // 实现用户登录的逻辑
     let body = req.body;
-    console.log(body.username, body.password);
     if (body.username === 'admin' && body.password === 'e10adc3949ba59abbe56e057f20f883e') {
         res.json({
             code: 200, data: {access_token: 'bqddxxwqmfncffacvbpkuxvwvqrhln'}, msg: '登录成功'
@@ -77,7 +74,7 @@ app.post('/login', (req, res) => {
 });
 
 // 视频上传
-app.post('/file/video', (req, res) => {
+app.post('/api-control-hub/file/video', (req, res) => {
     // 实现视频上传的逻辑
     res.json({
         code: 200, data: {
@@ -87,7 +84,7 @@ app.post('/file/video', (req, res) => {
 });
 
 // 图片上传
-app.post('/file/upload', (req, res) => {
+app.post('/api-control-hub/file/upload', (req, res) => {
     // 实现图片上传的逻辑
     res.json({
         code: 200,
@@ -97,7 +94,7 @@ app.post('/file/upload', (req, res) => {
 });
 
 // 按钮权限
-app.get('/auth/buttons', (req, res) => {
+app.get('/api-control-hub/auth/buttons', (req, res) => {
     // 实现按钮权限的逻辑
     let accessToken = req.headers['x-access-token'];
     let mockData = {};
@@ -110,15 +107,16 @@ app.get('/auth/buttons', (req, res) => {
             code: 200, data: localAuth.buttons.user, msg: '获取按钮权限成功'
         }
     }
+    res.json(mockData);
 });
 
 // 用户信息模拟
-app.post('/account/list', (req, res) => {
+app.post('/api-control-hub/account/list', (req, res) => {
     // 实现用户信息模拟的逻辑
 });
 
 // 连接测试服务
-app.get('/', (req, res) => {
+app.get('/api-control-hub', (req, res) => {
     res.json({
         code: 200, msg: '欢迎来到HTTP接口管理平台'
     });
