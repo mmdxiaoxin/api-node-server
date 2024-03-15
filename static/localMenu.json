@@ -87,9 +87,9 @@
           }
         },
         {
-          "path": "/workbench/myTeam",
-          "name": "myTeam",
-          "component": "/workbench/myTeam/index",
+          "path": "/workbench/teamConfig",
+          "name": "teamConfig",
+          "component": "/workbench/teamConfig/index",
           "meta": {
             "icon": "Setting",
             "title": "团队设置",
