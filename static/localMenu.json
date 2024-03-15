@@ -103,9 +103,9 @@
       ]
     },
     {
-      "path": "/projectCollection/index",
-      "name": "projectCollection",
-      "component": "/projectCollection/index",
+      "path": "/apiManagement/index",
+      "name": "apiManagement",
+      "component": "/apiManagement/index",
       "meta": {
         "icon": "Files",
         "title": "接口管理",
