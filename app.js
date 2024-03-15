@@ -113,6 +113,40 @@ app.get('/api-control-hub/auth/buttons', (req, res) => {
 // 用户信息模拟
 app.post('/api-control-hub/account/list', (req, res) => {
     // 实现用户信息模拟的逻辑
+    let query = req.body;
+    let mockData = {};
+    if (query.pageSize > 10) {
+        mockData = Mock.Mock({
+            "datalist|18": [{
+                id: "@string(number,20)",
+                username: query.username ? query.username : "@cname",
+                gender: query.gender ? query.gender : "@integer(1, 2)",
+                idCard: query.idCard ? query.idCard : "@id",
+                email: query.email ? query.email : "@email",
+                address: "@city(true)",
+                createTime: "@date @time",
+                status: query.status !== undefined ? query.status : "@integer(0, 1)",
+                "avatar|1": ["https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110013.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110015.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110012.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110032.jpg"]
+            }], pageNum: Number(query.pageNum), pageSize: Number(query.pageSize), total: 18
+        })
+    } else {
+        mockData = Mock.Mock({
+            "datalist|10": [{
+                id: "@string(number,20)",
+                username: query.username ? query.username : "@cname",
+                gender: query.gender ? query.gender : "@integer(1, 2)",
+                idCard: query.idCard ? query.idCard : "@id",
+                email: query.email ? query.email : "@email",
+                address: "@city(true)",
+                createTime: "@date @time",
+                status: query.status !== undefined ? query.status : "@integer(0, 1)",
+                "avatar|1": ["https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110013.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110015.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110012.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110032.jpg"]
+            }], pageNum: Number(query.pageNum), pageSize: Number(query.pageSize), total: 10
+        })
+    }
+    res.json({
+        code: 200, data: mockData, msg: '获取用户信息成功'
+    });
 });
 
 // 连接测试服务
