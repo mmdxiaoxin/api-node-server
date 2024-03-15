@@ -15,9 +15,9 @@
       }
     },
     {
-      "path": "/myProject",
-      "name": "myProject",
-      "redirect": "/myProject/mySpace",
+      "path": "/workbench",
+      "name": "workbench",
+      "redirect": "/workbench/projectSpace",
       "meta": {
         "icon": "Odometer",
         "title": "工作台",
@@ -29,9 +29,9 @@
       },
       "children": [
         {
-          "path": "/myProject/mySpace",
-          "name": "mySpace",
-          "component": "/myProject/mySpace/index",
+          "path": "/workbench/projectSpace",
+          "name": "projectSpace",
+          "component": "/workbench/projectSpace/index",
           "params": {
             "id": 12345,
             "spaceName": "个人空间"
@@ -51,9 +51,9 @@
           }
         },
         {
-          "path": "/myProject/myTeam1",
+          "path": "/workbench/myTeam1",
           "name": "myTeam1",
-          "component": "/myProject/mySpace/index",
+          "component": "/workbench/projectSpace/index",
           "params": {
             "id": 123456,
             "spaceName": "团队1"
@@ -69,9 +69,9 @@
           }
         },
         {
-          "path": "/myProject/myTeam2",
+          "path": "/workbench/myTeam2",
           "name": "myTeam2",
-          "component": "/myProject/mySpace/index",
+          "component": "/workbench/projectSpace/index",
           "params": {
             "id": 12356,
             "spaceName": "团队2"
@@ -87,9 +87,9 @@
           }
         },
         {
-          "path": "/myProject/myTeam",
+          "path": "/workbench/myTeam",
           "name": "myTeam",
-          "component": "/myProject/myTeam/index",
+          "component": "/workbench/myTeam/index",
           "meta": {
             "icon": "Setting",
             "title": "团队设置",
@@ -131,9 +131,9 @@
       }
     },
     {
-      "path": "/myCollection/index",
-      "name": "myCollection",
-      "component": "/myCollection/index",
+      "path": "/myStar/index",
+      "name": "myStar",
+      "component": "/myStar/index",
       "meta": {
         "icon": "Collection",
         "title": "我的收藏",
@@ -175,9 +175,9 @@
       }
     },
     {
-      "path": "/myProject",
-      "name": "myProject",
-      "redirect": "/myProject/mySpace",
+      "path": "/workbench",
+      "name": "workbench",
+      "redirect": "/workbench/projectSpace",
       "meta": {
         "icon": "Odometer",
         "title": "工作台",
@@ -189,9 +189,9 @@
       },
       "children": [
         {
-          "path": "/myProject/mySpace",
-          "name": "mySpace",
-          "component": "/myProject/mySpace/index",
+          "path": "/workbench/projectSpace",
+          "name": "projectSpace",
+          "component": "/workbench/projectSpace/index",
           "params": {
             "id": 12345,
             "spaceName": "个人空间"
@@ -211,9 +211,9 @@
           }
         },
         {
-          "path": "/myProject/myTeam1",
+          "path": "/workbench/myTeam1",
           "name": "myTeam1",
-          "component": "/myProject/mySpace/index",
+          "component": "/workbench/projectSpace/index",
           "params": {
             "id": 123456,
             "spaceName": "团队1"
@@ -229,9 +229,9 @@
           }
         },
         {
-          "path": "/myProject/myTeam2",
+          "path": "/workbench/myTeam2",
           "name": "myTeam2",
-          "component": "/myProject/mySpace/index",
+          "component": "/workbench/projectSpace/index",
           "params": {
             "id": 12356,
             "spaceName": "团队2"
@@ -247,9 +247,9 @@
           }
         },
         {
-          "path": "/myProject/myTeam",
-          "name": "myTeam",
-          "component": "/myProject/myTeam/index",
+          "path": "/workbench/teamConfig",
+          "name": "teamConfig",
+          "component": "/workbench/teamConfig/index",
           "meta": {
             "icon": "Setting",
             "title": "团队设置",
@@ -263,9 +263,9 @@
       ]
     },
     {
-      "path": "/projectCollection/index",
-      "name": "projectCollection",
-      "component": "/projectCollection/index",
+      "path": "/apiManagement/index",
+      "name": "apiManagement",
+      "component": "/apiManagement/index",
       "meta": {
         "icon": "Files",
         "title": "接口管理",
@@ -291,9 +291,9 @@
       }
     },
     {
-      "path": "/myCollection/index",
-      "name": "myCollection",
-      "component": "/myCollection/index",
+      "path": "/myStar/index",
+      "name": "myStar",
+      "component": "/myStar/index",
       "meta": {
         "icon": "Collection",
         "title": "我的收藏",
