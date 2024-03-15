@@ -31,48 +31,73 @@ router.post('/list', (req, res) => {
                 mockCreateTime: "@date @time",
                 mockStatus: query.status !== undefined ? query.status : "@integer(0, 1)",
                 mockContent: "@word(5, 168)"
-            }],
-            pageNum: Number(query.pageNum),
-            pageSize: Number(query.pageSize),
-            total: 18
+            }], pageNum: Number(query.pageNum), pageSize: Number(query.pageSize), total: 18
         });
-        res.json({
-            code: 200,
-            data: mockData,
-            msg: "成功"
+    } else if (query.pageSize === 25) {
+        mockData = Mock.mock({
+            'list|25': [{
+                id: "@string(number,18)",
+                mockMethod: query.mockMethod ? query.mockMethod : "@pick(['GET', 'POST', 'DELETE', 'PUT'])",
+                mockURL: query.mockURL ? query.mockURL : "/" + "@word(5, 18)",
+                mockDescription: "@city(true)",
+                mockCreateTime: "@date @time",
+                mockStatus: query.status !== undefined ? query.status : "@integer(0, 1)",
+                mockContent: "@word(5, 168)"
+            }], pageNum: Number(query.pageNum), pageSize: Number(query.pageSize), total: 2000
+        });
+    } else if (query.pageSize === 50) {
+        mockData = Mock.mock({
+            'list|50': [{
+                id: "@string(number,18)",
+                mockMethod: query.mockMethod ? query.mockMethod : "@pick(['GET', 'POST', 'DELETE', 'PUT'])",
+                mockURL: query.mockURL ? query.mockURL : "/" + "@word(5, 18)",
+                mockDescription: "@city(true)",
+                mockCreateTime: "@date @time",
+                mockStatus: query.status !== undefined ? query.status : "@integer(0, 1)",
+                mockContent: "@word(5, 168)"
+            }], pageNum: Number(query.pageNum), pageSize: Number(query.pageSize), total: 2000
+        });
+    } else if (query.pageSize === 100) {
+        mockData = Mock.mock({
+            'list|100': [{
+                id: "@string(number,18)",
+                mockMethod: query.mockMethod ? query.mockMethod : "@pick(['GET', 'POST', 'DELETE', 'PUT'])",
+                mockURL: query.mockURL ? query.mockURL : "/" + "@word(5, 18)",
+                mockDescription: "@city(true)",
+                mockCreateTime: "@date @time",
+                mockStatus: query.status !== undefined ? query.status : "@integer(0, 1)",
+                mockContent: "@word(5, 168)"
+            }], pageNum: Number(query.pageNum), pageSize: Number(query.pageSize), total: 2000
         });
     } else {
-        res.json({
-            code: 200,
-            data: {
-                list: [],
-                pageNum: 1,
-                pageSize: 10,
-                total: 0
-            },
-            msg: "成功"
+        mockData = Mock.mock({
+            'list|10': [{
+                id: "@string(number,18)",
+                mockMethod: query.mockMethod ? query.mockMethod : "@pick(['GET', 'POST', 'DELETE', 'PUT'])",
+                mockURL: query.mockURL ? query.mockURL : "/" + "@word(5, 18)",
+                mockDescription: "@city(true)",
+                mockCreateTime: "@date @time",
+                mockStatus: query.status !== undefined ? query.status : "@integer(0, 1)",
+                mockContent: "@word(5, 168)"
+            }], pageNum: Number(query.pageNum), pageSize: Number(query.pageSize), total: 2000
         });
     }
     res.json({
-        code: 200,
-        data: mockData,
-        msg: "成功"
-    })
+        code: 200, data: mockData, msg: "成功"
+    });
 });
 
 router.post('/delete', (req, res) => {
     // 实现删除 Mock 接口的逻辑
     res.json({
-        code: 200,
-        msg: "成功"
+        code: 200, msg: "成功"
     });
 });
 
 router.post('/change', (req, res) => {
     // 实现切换接口状态的逻辑
     res.json({
-        code: 200,
-        msg: "成功"
+        code: 200, msg: "成功"
     });
 });
 
