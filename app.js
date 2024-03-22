@@ -1,163 +1,55 @@
 const express = require('express');
-const localMenu = require('./static/localMenu.json');
-const localAuth = require('./static/localAuth.json');
+const logger = require('morgan');
+const createError = require('http-errors');
+const bodyParser = require('body-parser');
+const path = require("path");
+const cookieParser = require('cookie-parser');
+
+// 引入mockjs
 const Mock = require('mockjs');
+
+// 创建服务器
 const app = express();
 
 // 引入路由模块
-const userRoutes = require('./routes/userRoutes');
-const projectRoutes = require('./routes/projectRoutes');
-const mockRoutes = require('./routes/mockRoutes');
-const httpRoutes = require('./routes/httpRoutes');
+const userRoutes = require('./routes/user');
+const projectRoutes = require('./routes/project');
+const mockRoutes = require('./routes/mock');
+const httpRoutes = require('./routes/http');
+const indexRoutes = require('./routes/index');
+
 
 // 中间件用于解析请求体
 /*
 * 在路由挂载前加载，否则无法解析请求体
 * */
-app.use(express.json());
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(cookieParser());
 
 // 挂载路由模块
+app.use('/api-control-hub', indexRoutes);
 app.use('/api-control-hub/user', userRoutes);
 app.use('/api-control-hub/project', projectRoutes);
 app.use('/api-control-hub/mock', mockRoutes);
 app.use('/api-control-hub/http', httpRoutes);
 
-
-// 注册
-app.post('/api-control-hub/register', (req, res) => {
-    // 实现用户注册的逻辑
-    res.json({
-        code: 200, msg: '退出登录成功'
-    });
+// 捕获404并转发到错误处理程序
+app.use(function (req, res, next) {
+    next(createError(404));
 });
 
-// 用户菜单
-app.get('/api-control-hub/menu/list', (req, res) => {
-    // 实现获取用户菜单的逻辑
-    let accessToken = req.headers['x-access-token'];
-    let mockData = [];
-    if (accessToken === 'bqddxxwqmfncffacvbpkuxvwvqrhln') {
-        mockData = localMenu.admin;
-    } else {
-        mockData = localMenu.user;
-    }
-    res.json({
-        code: 200, data: mockData, msg: '获取用户菜单成功'
-    });
+// 错误处理程序
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
-// 退出登录
-app.post('/api-control-hub/logout', (req, res) => {
-    // 实现退出登录的逻辑
-    res.json({
-        code: 200, msg: '退出登录成功'
-    });
-});
 
-// 用户登录
-app.post('/api-control-hub/login', (req, res) => {
-    // 实现用户登录的逻辑
-    let body = req.body;
-    if (body.username === 'admin' && body.password === 'e10adc3949ba59abbe56e057f20f883e') {
-        res.json({
-            code: 200, data: {access_token: 'bqddxxwqmfncffacvbpkuxvwvqrhln'}, msg: '登录成功'
-        });
-    } else if (body.username === 'user' && body.password === 'e10adc3949ba59abbe56e057f20f883e') {
-        res.json({
-            code: 200, data: {access_token: 'unufvdotdqxuzfbdygovfmsbftlvbn'}, msg: '登录成功'
-        });
-    } else {
-        res.json({
-            code: 400, msg: '用户名或密码错误'
-        });
-    }
-});
-
-// 视频上传
-app.post('/api-control-hub/file/video', (req, res) => {
-    // 实现视频上传的逻辑
-    res.json({
-        code: 200, data: {
-            fileUrl: 'http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4'
-        }, msg: "成功"
-    });
-});
-
-// 图片上传
-app.post('/api-control-hub/file/upload', (req, res) => {
-    // 实现图片上传的逻辑
-    res.json({
-        code: 200,
-        data: ["https://i.imgtg.com/2023/01/16/QRBHS.jpg", "https://i.imgtg.com/2023/01/16/QRqMK.jpg", "https://i.imgtg.com/2023/01/16/QR57a.jpg", "https://i.imgtg.com/2023/01/16/QRa0s.jpg"],
-        msg: "成功"
-    })
-});
-
-// 按钮权限
-app.get('/api-control-hub/auth/buttons', (req, res) => {
-    // 实现按钮权限的逻辑
-    let accessToken = req.headers['x-access-token'];
-    let mockData = {};
-    if (accessToken === 'bqddxxwqmfncffacvbpkuxvwvqrhln') {
-        mockData = {
-            code: 200, data: localAuth.buttons.admin, msg: '获取按钮权限成功'
-        }
-    } else if (accessToken === 'unufvdotdqxuzfbdygovfmsbftlvbn') {
-        mockData = {
-            code: 200, data: localAuth.buttons.user, msg: '获取按钮权限成功'
-        }
-    }
-    res.json(mockData);
-});
-
-// 用户信息模拟
-app.post('/api-control-hub/account/list', (req, res) => {
-    // 实现用户信息模拟的逻辑
-    let query = req.body;
-    let mockData = {};
-    if (query.pageSize > 10) {
-        mockData = Mock.Mock({
-            "datalist|18": [{
-                id: "@string(number,20)",
-                username: query.username ? query.username : "@cname",
-                gender: query.gender ? query.gender : "@integer(1, 2)",
-                idCard: query.idCard ? query.idCard : "@id",
-                email: query.email ? query.email : "@email",
-                address: "@city(true)",
-                createTime: "@date @time",
-                status: query.status !== undefined ? query.status : "@integer(0, 1)",
-                "avatar|1": ["https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110013.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110015.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110012.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110032.jpg"]
-            }], pageNum: Number(query.pageNum), pageSize: Number(query.pageSize), total: 18
-        })
-    } else {
-        mockData = Mock.Mock({
-            "datalist|10": [{
-                id: "@string(number,20)",
-                username: query.username ? query.username : "@cname",
-                gender: query.gender ? query.gender : "@integer(1, 2)",
-                idCard: query.idCard ? query.idCard : "@id",
-                email: query.email ? query.email : "@email",
-                address: "@city(true)",
-                createTime: "@date @time",
-                status: query.status !== undefined ? query.status : "@integer(0, 1)",
-                "avatar|1": ["https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110013.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110015.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110012.jpg", "https://iamge-1259297738.cos.ap-chengdu.myqcloud.com/img/20220728110032.jpg"]
-            }], pageNum: Number(query.pageNum), pageSize: Number(query.pageSize), total: 10
-        })
-    }
-    res.json({
-        code: 200, data: mockData, msg: '获取用户信息成功'
-    });
-});
-
-// 连接测试服务
-app.get('/api-control-hub', (req, res) => {
-    res.json({
-        code: 200, msg: '欢迎来到HTTP接口管理平台'
-    });
-});
-
-// 启动服务器
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Mock server is running on port ${PORT}`);
-});
+module.exports = app;

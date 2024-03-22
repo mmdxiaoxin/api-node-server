@@ -301,4 +301,19 @@ router.post('/add', (req, res) => {
     });
 });
 
+
+router.post('/info', (req, res) => {
+    // 实现获取用户权限的逻辑
+    const userInfo = {
+        name: "小新AI",
+        email: "782446723@qq.com",
+        phone: "18888888888",
+        avatar: "src/assets/images/avatar.png",
+        description: "嗨嗨嗨，测试."
+    }
+    res.json({
+        code: 200, data: userInfo, msg: '成功'
+    });
+});
+
 module.exports = router;

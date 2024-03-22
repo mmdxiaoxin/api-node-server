@@ -61,4 +61,18 @@ router.post('/add', (req, res) => {
     });
 });
 
+router.post('/workbench', (req, res) => {
+    const workbench = {
+        projectId: "0000001",
+        projectName: "农业监控系统",
+        teamId: "000001",
+        teamName: "个人空间",
+        currentRole: "团队拥有者",
+        curNickName: ""
+    }
+    res.json({
+        code: 200, data: workbench, msg: '获取项目详情成功'
+    });
+});
+
 module.exports = router;
