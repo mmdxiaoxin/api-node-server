@@ -17,7 +17,7 @@ const projectRoutes = require('./routes/project');
 const mockRoutes = require('./routes/mock');
 const httpRoutes = require('./routes/http');
 const indexRoutes = require('./routes/index');
-
+const teamRoutes = require('./routes/team');
 
 // 中间件用于解析请求体
 /*
@@ -34,6 +34,7 @@ app.use('/api-control-hub/user', userRoutes);
 app.use('/api-control-hub/project', projectRoutes);
 app.use('/api-control-hub/mock', mockRoutes);
 app.use('/api-control-hub/http', httpRoutes);
+app.use('/api-control-hub/team', teamRoutes);
 
 // 捕获404并转发到错误处理程序
 app.use(function (req, res, next) {
