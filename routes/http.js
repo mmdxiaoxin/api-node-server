@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const localHttp = require('../static/localHttp.json');
+const localProject = require("../static/localProject.json");
 
 // 接口删除
 router.post('/delete', (req, res) => {
@@ -55,25 +56,27 @@ router.post('/config', (req, res) => {
 });
 
 // 接口项目列表
-router.post('/collection/list', (req, res) => {
+router.post('/tree/list', (req, res) => {
     // 实现接口项目列表的逻辑
-    let query = req.body;
+    const query = req.body;
+    const projectId = parseInt(query.projectId);
+    const projectName = localProject.projectList.find(item => item.id === projectId).name;
     res.json({
         code: 200, data: [{
-            id: "1", name: query.projectName, isProject: true, children: [{
-                id: "11", name: "目录1", isDirectory: true, children: [{
-                    id: "111", name: "接口1", isApi: true
+            id: "1", name: projectName, type: "project", children: [{
+                id: "11", name: "目录1", type: "dir", children: [{
+                    id: "111", name: "接口1", type: "api"
                 }, {
-                    id: "112", name: "接口2", isApi: true
+                    id: "112", name: "接口2", type: "api"
                 }, {
-                    id: "113", name: "接口3", isApi: true
+                    id: "113", name: "接口3", type: "api"
                 }, {
-                    id: "114", name: "接口4", isApi: true
+                    id: "114", name: "接口4", type: "api"
                 }, {
-                    id: "115", name: "接口5", isApi: true
+                    id: "115", name: "接口5", type: "api"
                 }]
             }, {
-                id: "12", name: "目录2", isDirectory: true
+                id: "12", name: "目录2", type: "dir"
             }]
         }], message: '获取成功',
     })
@@ -89,6 +92,38 @@ router.post('/change', (req, res) => {
 router.post('/add', (req, res) => {
     // 实现接口添加的逻辑
     res.json({code: 200, message: '添加成功'});
+});
+
+router.post('/directory', (req, res) => {
+    const query = req.body;
+    const directoryId = query.directoryId;
+    if (directoryId === '11') {
+        res.json({
+            code: 200, data: {
+                directoryName: '目录1',
+                apiList: [{
+                    id: "111", name: "接口1", method: "POST"
+                }, {
+                    id: "112", name: "接口2", method: "POST"
+                }, {
+                    id: "113", name: "接口3", method: "GET"
+                }, {
+                    id: "114", name: "接口4", method: "POST"
+                }, {
+                    id: "115", name: "接口5", method: "POST"
+                }]
+            }, message: '获取成功'
+        });
+    } else if (directoryId === '12') {
+        res.json({
+            code: 200, data: {
+                directoryName: '目录2',
+                apiList: []
+            }, message: '获取成功'
+        });
+    } else {
+        res.json({code: 404, message: '未找到相关结果'});
+    }
 });
 
 module.exports = router;

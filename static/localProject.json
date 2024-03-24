@@ -1,0 +1,76 @@
+{
+  "projectList": [
+    {
+      "id": 1,
+      "name": "农业监控系统",
+      "icon": "src/assets/icons/xianxingdaoyu.svg",
+      "isCollection": true
+    },
+    {
+      "id": 2,
+      "name": "电商平台开发",
+      "icon": "src/assets/icons/xianxingdiqiu.svg",
+      "isCollection": false
+    },
+    {
+      "id": 3,
+      "name": "社交媒体应用",
+      "icon": "src/assets/icons/xianxingditu.svg",
+      "isCollection": false
+    },
+    {
+      "id": 4,
+      "name": "在线教育平台",
+      "icon": "src/assets/icons/xianxingfanchuan.svg",
+      "isCollection": true
+    },
+    {
+      "id": 5,
+      "name": "智能家居控制系统",
+      "icon": "src/assets/icons/xianxingfeiji.svg",
+      "isCollection": false
+    },
+    {
+      "id": 6,
+      "name": "健康管理应用",
+      "icon": "src/assets/icons/xianxinglvhangriji.svg",
+      "isCollection": true
+    },
+    {
+      "id": 7,
+      "name": "旅游信息平台",
+      "icon": "src/assets/icons/xianxingtianqiyubao.svg",
+      "isCollection": false
+    },
+    {
+      "id": 8,
+      "name": "智能物流系统",
+      "icon": "src/assets/icons/xianxingxiangjipaizhao.svg",
+      "isCollection": true
+    },
+    {
+      "id": 9,
+      "name": "人才招聘平台",
+      "icon": "src/assets/icons/xianxingxiarilengyin.svg",
+      "isCollection": false
+    },
+    {
+      "id": 10,
+      "name": "金融数据分析工具",
+      "icon": "src/assets/icons/xianxingyoulun.svg",
+      "isCollection": true
+    },
+    {
+      "id": 11,
+      "name": "在线购物商城",
+      "icon": "src/assets/icons/xianxingdaoyu.svg",
+      "isCollection": false
+    },
+    {
+      "id": 12,
+      "name": "智能车辆管理系统",
+      "icon": "src/assets/icons/xianxingdaoyu.svg",
+      "isCollection": false
+    }
+  ]
+}
