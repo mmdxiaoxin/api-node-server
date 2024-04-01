@@ -3,6 +3,7 @@ const logger = require('morgan');
 const createError = require('http-errors');
 const bodyParser = require('body-parser');
 const path = require("path");
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 // 引入mockjs
@@ -23,6 +24,7 @@ const teamRoutes = require('./routes/team');
 /*
 * 在路由挂载前加载，否则无法解析请求体
 * */
+app.use(cors());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
