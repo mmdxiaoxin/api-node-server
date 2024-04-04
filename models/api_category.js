@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const AchsProject = require('./achs_project');
 const sequelize = require('../config/database');
 
 const ApiCategory = sequelize.define('api_category', {
@@ -18,5 +19,7 @@ const ApiCategory = sequelize.define('api_category', {
         }
     }
 });
+
+ApiCategory.belongsTo(AchsProject, { foreignKey: 'project_id', as: 'project' });
 
 module.exports = ApiCategory;
