@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const localHttp = require('../static/localHttp.json');
 const localProject = require("../static/localProject.json");
-const {buildTree, getCategoryById} = require("../services/HttpConfigService");
+const {buildTree, getCategoryById, getApiConfigDetails} = require("../services/HttpConfigService");
 const ApiConfig = require('../models/api_config');
 const ApiCategory = require('../models/api_category');
 
@@ -34,13 +34,12 @@ router.post('/config/add', (req, res) => {
 router.post('/config', (req, res) => {
     // 实现获取接口配置项的逻辑
     let query = req.body;
-    let configData = {};
-    configData = localHttp.config[`${query.apiId}`];
-    if (configData) {
-        res.json({code: 200, data: configData, message: '获取成功'});
-    } else {
-        res.json({code: 404, message: '未找到相关结果'});
-    }
+    getApiConfigDetails(query.apiId).then(data => {
+        res.json({code: 200, data: data, message: '获取成功'});
+    }).catch(err => {
+        console.error(err);
+        res.json({code: 500, message: '获取失败'});
+    });
 });
 
 // 接口项目列表
