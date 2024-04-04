@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const localHttp = require('../static/localHttp.json');
 const localProject = require("../static/localProject.json");
-const {buildTree} = require("../services/HttpConfigService");
+const {buildTree, getCategoryById} = require("../services/HttpConfigService");
 const ApiConfig = require('../models/api_config');
 const ApiCategory = require('../models/api_category');
 
@@ -71,18 +71,11 @@ router.post('/add', (req, res) => {
 router.post('/directory', (req, res) => {
     const query = req.body;
     const categoryId = query.directoryId;
-    const category = ApiCategory.findByPk(categoryId);
-    const apis = ApiConfig.findAll({
-        where: {category_id: categoryId}
-    });
-    res.json({
-        code: 200, data: {
-            directoryName: category.category_name,
-            children: apis.map(api => ({
-                id: api.id,
-                name: api.api_name
-            }))
-        }, message: '获取成功'
+    getCategoryById(categoryId).then(data => {
+        res.json({code: 200, data, message: '获取成功'});
+    }).catch(err => {
+        console.error(err);
+        res.json({code: 500, message: '获取失败'});
     });
 });
 

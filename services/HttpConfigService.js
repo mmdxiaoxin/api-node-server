@@ -41,6 +41,21 @@ async function buildTree(projectId) {
     return tree;
 }
 
+async function getCategoryById(categoryId) {
+    const category = await ApiCategory.findByPk(categoryId);
+    const apis = await ApiConfig.findAll({
+        where: {category_id: categoryId}
+    });
+    return {
+        directoryName: category.category_name,
+        children: apis.map(api => ({
+            id: api.id.toString(),
+            name: api.api_name
+        }))
+    };
+}
+
 module.exports = {
-    buildTree
+    buildTree,
+    getCategoryById
 };
