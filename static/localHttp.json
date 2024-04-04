@@ -1,6 +1,6 @@
 {
   "config": {
-    "api1": {
+    "111": {
       "name": "接口1",
       "requestMethod": "POST",
       "apiUrl": "https://api.example.com/data",
@@ -50,7 +50,7 @@
       "createTime": "2023-01-01T12:00:00Z",
       "updateTime": "2023-01-02T15:30:00Z"
     },
-    "api2": {
+    "112": {
       "name": "接口2",
       "requestMethod": "POST",
       "apiUrl": "https://mock.presstime.cn/mock/6534b86affb279f23e01859d/api-control-hub/http/collection/list",
@@ -66,7 +66,7 @@
       "createTime": "2023-01-01T12:00:00Z",
       "updateTime": "2023-01-02T15:30:00Z"
     },
-    "api3": {
+    "113": {
       "name": "接口3",
       "requestMethod": "GET",
       "apiUrl": "https://mock.presstime.cn/mock/6534b86affb279f23e01859d/api-control-hub",
@@ -82,7 +82,7 @@
       "createTime": "2023-01-01T12:00:00Z",
       "updateTime": "2023-01-02T15:30:00Z"
     },
-    "api4": {
+    "114": {
       "name": "接口4",
       "requestMethod": "POST",
       "apiUrl": "https://mock.presstime.cn/mock/6534b86affb279f23e01859d/api-control-hub",
@@ -114,7 +114,7 @@
       "createTime": "2023-01-01T12:00:00Z",
       "updateTime": "2023-01-02T15:30:00Z"
     },
-    "api5": {
+    "115": {
       "name": "接口5",
       "requestMethod": "POST",
       "apiUrl": "https://mock.presstime.cn/mock/6534b86affb279f23e01859d/api-control-hub",

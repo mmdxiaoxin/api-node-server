@@ -32,27 +32,12 @@ router.post('/config', (req, res) => {
     // 实现获取接口配置项的逻辑
     let query = req.body;
     let configData = {};
-    switch (query.apiId) {
-        case '111':
-            configData = localHttp.config.api1;
-            break;
-        case '112':
-            configData = localHttp.config.api2;
-            break;
-        case '113':
-            configData = localHttp.config.api3;
-            break;
-        case '114':
-            configData = localHttp.config.api4;
-            break;
-        case '115':
-            configData = localHttp.config.api5;
-            break;
-        default:
-            res.json({code: 404, message: '未获取资源'});
-            break;
+    configData = localHttp.config[`${query.apiId}`];
+    if (configData) {
+        res.json({code: 200, data: configData, message: '获取成功'});
+    } else {
+        res.json({code: 404, message: '未找到相关结果'});
     }
-    res.json({code: 200, data: configData, message: '获取成功'});
 });
 
 // 接口项目列表
