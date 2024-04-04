@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const localHttp = require('../static/localHttp.json');
 const localProject = require("../static/localProject.json");
+const {buildTree} = require("../services/HttpConfigService");
+const ApiConfig = require('../models/api_config');
+const ApiCategory = require('../models/api_category');
 
 // 接口删除
 router.post('/delete', (req, res) => {
@@ -45,26 +48,12 @@ router.post('/tree/list', (req, res) => {
     // 实现接口项目列表的逻辑
     const query = req.body;
     const projectId = parseInt(query.projectId);
-    const projectName = localProject.projectList.find(item => item.id === projectId).name;
-    res.json({
-        code: 200, data: [{
-            id: "1", name: projectName, type: "project", children: [{
-                id: "11", name: "目录1", type: "dir", children: [{
-                    id: "111", name: "接口1", type: "api"
-                }, {
-                    id: "112", name: "接口2", type: "api"
-                }, {
-                    id: "113", name: "接口3", type: "api"
-                }, {
-                    id: "114", name: "接口4", type: "api"
-                }, {
-                    id: "115", name: "接口5", type: "api"
-                }]
-            }, {
-                id: "12", name: "目录2", type: "dir"
-            }]
-        }], message: '获取成功',
-    })
+    buildTree(projectId).then(tree => {
+        res.json({code: 200, data: tree, message: '获取成功'});
+    }).catch(err => {
+        console.error(err);
+        res.json({code: 500, message: '获取失败'});
+    });
 });
 
 // 接口修改
@@ -81,34 +70,20 @@ router.post('/add', (req, res) => {
 
 router.post('/directory', (req, res) => {
     const query = req.body;
-    const directoryId = query.directoryId;
-    if (directoryId === '11') {
-        res.json({
-            code: 200, data: {
-                directoryName: '目录1',
-                apiList: [{
-                    id: "111", name: "接口1", method: "POST"
-                }, {
-                    id: "112", name: "接口2", method: "POST"
-                }, {
-                    id: "113", name: "接口3", method: "GET"
-                }, {
-                    id: "114", name: "接口4", method: "POST"
-                }, {
-                    id: "115", name: "接口5", method: "POST"
-                }]
-            }, message: '获取成功'
-        });
-    } else if (directoryId === '12') {
-        res.json({
-            code: 200, data: {
-                directoryName: '目录2',
-                apiList: []
-            }, message: '获取成功'
-        });
-    } else {
-        res.json({code: 404, message: '未找到相关结果'});
-    }
+    const categoryId = query.directoryId;
+    const category = ApiCategory.findByPk(categoryId);
+    const apis = ApiConfig.findAll({
+        where: {category_id: categoryId}
+    });
+    res.json({
+        code: 200, data: {
+            directoryName: category.category_name,
+            children: apis.map(api => ({
+                id: api.id,
+                name: api.api_name
+            }))
+        }, message: '获取成功'
+    });
 });
 
 module.exports = router;
