@@ -124,7 +124,7 @@ async function getApiConfigDetails(apiConfigId) {
                 value: formX.field_value,
                 description: 'Query Body FormX'
             })),
-            queryJsonBody: JSON.stringify(apiRequest.body_json),
+            queryJsonBody: apiRequest.body_json ? JSON.stringify(apiRequest.body_json) : "",
             queryXmlBody: apiRequest.body_xml,
             queryRawBody: apiRequest.body_raw,
         };
