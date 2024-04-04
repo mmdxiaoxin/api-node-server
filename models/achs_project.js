@@ -9,7 +9,8 @@ const AchsProject = sequelize.define('achs_project', {
         autoIncrement: true
     },
     team_id: DataTypes.BIGINT,
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    icon: DataTypes.STRING
 });
 
 AchsProject.belongsTo(AchsTeam, { foreignKey: 'team_id', as: 'team' });
