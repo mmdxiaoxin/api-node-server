@@ -9,7 +9,7 @@ const ApiConfig = sequelize.define('api_config', {
         primaryKey: true,
         autoIncrement: true
     },
-    api_name: DataTypes.BIGINT,
+    api_name: DataTypes.STRING,
     creator_id: DataTypes.BIGINT,
     category_id: DataTypes.BIGINT,
     create_time: DataTypes.DATE
