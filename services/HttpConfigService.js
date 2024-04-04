@@ -1,5 +1,6 @@
 const ApiCategory = require('../models/api_category');
 const ApiConfig = require('../models/api_config');
+const ApiRequest = require('../models/api_request');
 
 async function buildTree(projectId) {
     // 查询指定项目的目录和接口数据
@@ -42,18 +43,38 @@ async function buildTree(projectId) {
 }
 
 async function getCategoryById(categoryId) {
-    const category = await ApiCategory.findByPk(categoryId);
-    const apis = await ApiConfig.findAll({
-        where: {category_id: categoryId}
-    });
-    return {
-        directoryName: category.category_name,
-        children: apis.map(api => ({
-            id: api.id.toString(),
-            name: api.api_name
-        }))
-    };
+    try {
+        const category = await ApiCategory.findByPk(categoryId);
+        if (!category) {
+            throw new Error('Category not found');
+        }
+
+        const apis = await ApiConfig.findAll({
+            where: {category_id: categoryId}
+        });
+
+        const result = {
+            directoryName: category.category_name,
+            children: await Promise.all(apis.map(async api => {
+                // 查询 ApiRequest 表获取方法信息
+                const request = await ApiRequest.findOne({
+                    where: {api_id: api.id}
+                });
+                return {
+                    id: api.id.toString(),
+                    name: api.api_name,
+                    method: request ? request.method : 'Unknown'
+                };
+            }))
+        };
+
+        return result;
+    } catch (error) {
+        console.error('Error fetching category by id:', error);
+        throw error;
+    }
 }
+
 
 module.exports = {
     buildTree,
