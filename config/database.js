@@ -6,7 +6,8 @@ const sequelize = new Sequelize('achs', 'root', '122600', {
     dialect: 'mysql',
     define: {
         timestamps: false, // 不自动添加时间戳
-        freezeTableName: true // 使用单数表名
+        freezeTableName: true, // 使用单数表名
+        underscored: true // 使用下划线命名
     }
 });
 
