@@ -1,25 +1,63 @@
-const { DataTypes } = require('sequelize');
-const AchsProject = require('./achs_project');
-const sequelize = require('../config/database');
-
-const ApiCategory = sequelize.define('api_category', {
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('api_category', {
     id: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        autoIncrement: true
+      autoIncrement: true,
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true
     },
-    project_id: DataTypes.BIGINT,
-    category_name: DataTypes.STRING,
+    project_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'achs_project',
+        key: 'id'
+      }
+    },
+    category_name: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
     parent_id: {
-        type: DataTypes.BIGINT,
-        allowNull: true,
-        references: {
-            model: 'api_category',
-            key: 'id'
-        }
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'api_category',
+        key: 'id'
+      }
+    },
+    create_time: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
-});
-
-ApiCategory.belongsTo(AchsProject, { foreignKey: 'project_id', as: 'project' });
-
-module.exports = ApiCategory;
+  }, {
+    sequelize,
+    tableName: 'api_category',
+    timestamps: false,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "api_category_api_category_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "parent_id" },
+        ]
+      },
+      {
+        name: "api_category_achs_project_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "project_id" },
+        ]
+      },
+    ]
+  });
+};

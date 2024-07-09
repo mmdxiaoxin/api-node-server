@@ -1,20 +1,56 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const ApiConfig = require('./api_config');
-
-const ApiResponse = sequelize.define('api_response', {
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('api_response', {
     id: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        autoIncrement: true
+      autoIncrement: true,
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true
     },
-    api_id: DataTypes.BIGINT,
-    api_status: DataTypes.INTEGER,
-    api_time: DataTypes.STRING,
-    api_size: DataTypes.STRING,
-    api_content: DataTypes.TEXT
-});
-
-ApiResponse.belongsTo(ApiConfig, { foreignKey: 'api_id', as: 'apiConfig' });
-
-module.exports = ApiResponse;
+    api_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'api_config',
+        key: 'id'
+      }
+    },
+    api_status: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    api_time: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    api_size: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    api_content: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    tableName: 'api_response',
+    timestamps: true,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "api_response_api_config_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "api_id" },
+        ]
+      },
+    ]
+  });
+};

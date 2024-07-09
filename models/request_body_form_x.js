@@ -1,19 +1,52 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const ApiRequest = require('./api_request');
-
-const RequestBodyFormX = sequelize.define('request_body_form_x', {
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('request_body_form_x', {
     id: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        autoIncrement: true
+      autoIncrement: true,
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true
     },
-    request_id: DataTypes.BIGINT,
-    field_name: DataTypes.STRING,
-    field_type: DataTypes.STRING,
-    field_value: DataTypes.STRING
-});
-
-RequestBodyFormX.belongsTo(ApiRequest, { foreignKey: 'request_id', as: 'apiRequest' });
-
-module.exports = RequestBodyFormX;
+    request_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'api_request',
+        key: 'id'
+      }
+    },
+    field_name: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    field_type: {
+      type: DataTypes.STRING(20),
+      allowNull: true
+    },
+    field_value: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    tableName: 'request_body_form_x',
+    timestamps: false,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "request_body_form_x_api_request_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "request_id" },
+        ]
+      },
+    ]
+  });
+};

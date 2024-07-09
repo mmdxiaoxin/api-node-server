@@ -1,23 +1,69 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-
-const AchsUser = sequelize.define('achs_user', {
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('achs_user', {
     id: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        autoIncrement: true
+      autoIncrement: true,
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true
     },
-    name: DataTypes.STRING,
-    account: DataTypes.STRING,
-    password: DataTypes.STRING,
-    salt: DataTypes.STRING,
-    avatar: DataTypes.STRING,
-    phone: DataTypes.STRING,
-    email: DataTypes.STRING,
-    gender: DataTypes.INTEGER,
-    status: DataTypes.INTEGER,
-    description: DataTypes.STRING,
-    ctime: DataTypes.DATE
-});
-
-module.exports = AchsUser;
+    name: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    account: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    password: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    salt: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    avatar: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    phone: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    email: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    gender: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    status: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    description: {
+      type: DataTypes.STRING(500),
+      allowNull: true
+    },
+    create_time: {
+      type: DataTypes.DATE,
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    tableName: 'achs_user',
+    timestamps: false,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+    ]
+  });
+};

@@ -1,18 +1,48 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const AchsTeam = require('./achs_team');
-
-const AchsProject = sequelize.define('achs_project', {
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('achs_project', {
     id: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        autoIncrement: true
+      autoIncrement: true,
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true
     },
-    team_id: DataTypes.BIGINT,
-    name: DataTypes.STRING,
-    icon: DataTypes.STRING
-});
-
-AchsProject.belongsTo(AchsTeam, { foreignKey: 'team_id', as: 'team' });
-
-module.exports = AchsProject;
+    team_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'achs_team',
+        key: 'id'
+      }
+    },
+    name: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
+    icon: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    tableName: 'achs_project',
+    timestamps: true,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "achs_project_achs_team_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "team_id" },
+        ]
+      },
+    ]
+  });
+};

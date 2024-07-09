@@ -1,21 +1,59 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const AchsUser = require('./achs_user');
-const ApiCategory = require('./api_category');
-
-const ApiConfig = sequelize.define('api_config', {
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('api_config', {
     id: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        autoIncrement: true
+      autoIncrement: true,
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true
     },
-    api_name: DataTypes.STRING,
-    creator_id: DataTypes.BIGINT,
-    category_id: DataTypes.BIGINT,
-    create_time: DataTypes.DATE
-});
-
-ApiConfig.belongsTo(AchsUser, { foreignKey: 'creator_id', as: 'creator' });
-ApiConfig.belongsTo(ApiCategory, { foreignKey: 'category_id', as: 'category' });
-
-module.exports = ApiConfig;
+    api_name: {
+      type: DataTypes.STRING(100),
+      allowNull: true
+    },
+    creator_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'achs_user',
+        key: 'id'
+      }
+    },
+    category_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'api_category',
+        key: 'id'
+      }
+    }
+  }, {
+    sequelize,
+    tableName: 'api_config',
+    timestamps: true,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "api_config_achs_user_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "creator_id" },
+        ]
+      },
+      {
+        name: "api_config_api_category_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "category_id" },
+        ]
+      },
+    ]
+  });
+};

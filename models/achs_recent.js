@@ -1,19 +1,59 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const AchsUser = require('./achs_user');
-const AchsProject = require('./achs_project');
-
-const AchsRecent = sequelize.define('achs_recent', {
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('achs_recent', {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
     },
-    creator_id: DataTypes.BIGINT,
-    project_id: DataTypes.BIGINT
-});
-
-AchsRecent.belongsTo(AchsUser, { foreignKey: 'creator_id', as: 'creator' });
-AchsRecent.belongsTo(AchsProject, { foreignKey: 'project_id', as: 'project' });
-
-module.exports = AchsRecent;
+    creator_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'achs_user',
+        key: 'id'
+      }
+    },
+    project_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'achs_project',
+        key: 'id'
+      }
+    },
+    create_time: {
+      type: DataTypes.DATE,
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    tableName: 'achs_recent',
+    timestamps: false,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "achs_recent_achs_project_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "project_id" },
+        ]
+      },
+      {
+        name: "achs_recent_achs_user_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "creator_id" },
+        ]
+      },
+    ]
+  });
+};

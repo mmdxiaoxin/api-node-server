@@ -28,3 +28,6 @@ logs/
 # 忽略自动生成的文档
 doc/
 docs/
+
+# 忽略IDEA的配置文件
+.idea/

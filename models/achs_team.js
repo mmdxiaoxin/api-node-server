@@ -1,13 +1,33 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-
-const AchsTeam = sequelize.define('achs_team', {
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('achs_team', {
     id: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        autoIncrement: true
+      autoIncrement: true,
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true
     },
-    name: DataTypes.STRING
-});
-
-module.exports = AchsTeam;
+    name: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    create_time: {
+      type: DataTypes.DATE,
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    tableName: 'achs_team',
+    timestamps: false,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+    ]
+  });
+};

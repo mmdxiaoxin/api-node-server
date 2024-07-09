@@ -1,22 +1,66 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const ApiRequest = require('./api_request');
-const ApiResponse = require('./api_response');
-
-const ApiHeader = sequelize.define('api_header', {
+const Sequelize = require('sequelize');
+module.exports = function(sequelize, DataTypes) {
+  return sequelize.define('api_header', {
     id: {
-        type: DataTypes.BIGINT,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true
     },
-    request_id: DataTypes.BIGINT,
-    response_id: DataTypes.BIGINT,
-    header_name: DataTypes.STRING,
-    header_value: DataTypes.STRING,
-    description: DataTypes.STRING
-});
-
-ApiHeader.belongsTo(ApiRequest, { foreignKey: 'request_id', as: 'request' });
-ApiHeader.belongsTo(ApiResponse, { foreignKey: 'response_id', as: 'response' });
-
-module.exports = ApiHeader;
+    request_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'api_request',
+        key: 'id'
+      }
+    },
+    response_id: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      references: {
+        model: 'api_response',
+        key: 'id'
+      }
+    },
+    header_name: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    header_value: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    description: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    }
+  }, {
+    sequelize,
+    tableName: 'api_header',
+    timestamps: false,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "api_header_api_request_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "request_id" },
+        ]
+      },
+      {
+        name: "api_header_api_response_id_fk",
+        using: "BTREE",
+        fields: [
+          { name: "response_id" },
+        ]
+      },
+    ]
+  });
+};
