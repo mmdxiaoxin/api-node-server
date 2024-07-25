@@ -1,7 +1,7 @@
 {
   "admin": [
     {
-      "path": "/home/index",
+      "path": "/home",
       "name": "home",
       "component": "/home/index",
       "meta": {
@@ -103,9 +103,9 @@
       ]
     },
     {
-      "path": "/apiManagement/index",
-      "name": "apiManagement",
-      "component": "/apiManagement/index",
+      "path": "/http-client",
+      "name": "http-client",
+      "component": "/http-client/index",
       "meta": {
         "icon": "Files",
         "title": "接口管理",
@@ -117,9 +117,9 @@
       }
     },
     {
-      "path": "/mockServer/index",
-      "name": "mockServer",
-      "component": "/mockServer/index",
+      "path": "/mock",
+      "name": "mock",
+      "component": "/mock/index",
       "meta": {
         "icon": "SetUp",
         "title": "Mock 服务",
@@ -131,9 +131,9 @@
       }
     },
     {
-      "path": "/myStar/index",
-      "name": "myStar",
-      "component": "/myStar/index",
+      "path": "/star",
+      "name": "star",
+      "component": "/star/index",
       "meta": {
         "icon": "Collection",
         "title": "我的收藏",
@@ -145,9 +145,9 @@
       }
     },
     {
-      "path": "/recentlyVisited/index",
-      "name": "recentlyVisited",
-      "component": "/recentlyVisited/index",
+      "path": "/history",
+      "name": "history",
+      "component": "/history/index",
       "meta": {
         "icon": "Clock",
         "title": "最近访问",
@@ -161,7 +161,7 @@
   ],
   "user": [
     {
-      "path": "/home/index",
+      "path": "/home",
       "name": "home",
       "component": "/home/index",
       "meta": {
@@ -263,9 +263,9 @@
       ]
     },
     {
-      "path": "/apiManagement/index",
-      "name": "apiManagement",
-      "component": "/apiManagement/index",
+      "path": "/http-client",
+      "name": "http-client",
+      "component": "/http-client/index",
       "meta": {
         "icon": "Files",
         "title": "接口管理",
@@ -277,9 +277,9 @@
       }
     },
     {
-      "path": "/mockServer/index",
-      "name": "mockServer",
-      "component": "/mockServer/index",
+      "path": "/mock",
+      "name": "mock",
+      "component": "/mock/index",
       "meta": {
         "icon": "SetUp",
         "title": "Mock 服务",
@@ -291,9 +291,9 @@
       }
     },
     {
-      "path": "/myStar/index",
-      "name": "myStar",
-      "component": "/myStar/index",
+      "path": "/star",
+      "name": "star",
+      "component": "/star/index",
       "meta": {
         "icon": "Collection",
         "title": "我的收藏",
@@ -305,9 +305,9 @@
       }
     },
     {
-      "path": "/recentlyVisited/index",
-      "name": "recentlyVisited",
-      "component": "/recentlyVisited/index",
+      "path": "/history",
+      "name": "history",
+      "component": "/history/index",
       "meta": {
         "icon": "Clock",
         "title": "最近访问",
