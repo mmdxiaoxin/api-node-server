@@ -10,78 +10,51 @@ import { request_param as RequestParam } from "../models/request_param";
 import { achs_user as AchsUser } from "../models/achs_user";
 import { Http } from "../interface";
 
-interface TreeNode {
-    id: number;
-    parent_id: number | null;
-    category_name: string;
-    api_name: string;
-    type: string;
-    children: TreeNode[];
-}
-
+// TODO: 类型待校验
 async function buildConfigsTree(
     projectId: number
 ): Promise<Http.ResTree | null> {
-    try {
-        // 查询指定项目的目录
-        const categories = await ApiCategory.findAll({
-            where: { project_id: projectId },
+    // 查询指定项目的目录
+    const categoryData = await ApiCategory.findAll({
+        where: { project_id: "1" },
+    });
+
+    const totalData = [];
+
+    // 查询每个目录下的接口并合并
+    for (const category of categoryData) {
+        const configs = (
+            await ApiConfig.findAll({ where: { category_id: category.id } })
+        ).map((config) => config.dataValues);
+        totalData.push({ ...category, configs });
+    }
+
+    // 定义递归函数来构建树形结构
+    function buildTree(items: any[]) {
+        let treeObj = null;
+        const itemMap = new Map();
+
+        items.forEach((item: { id: any }) => {
+            itemMap.set(item.id, { ...item, children: [] });
         });
 
-        const totalData = [];
-
-        // 查询每个目录下的接口并合并
-        for (const category of categories) {
-            const configs = await ApiConfig.findAll({
-                where: { category_id: category.id },
-            });
-            const configData = configs.map((config) => config.dataValues);
-            totalData.push({ ...category, configs: configData });
-        }
-
-        // 定义递归函数来构建树形结构
-        function buildTree(items: TreeNode[]): Http.ResTree | null {
-            const treeObj = {};
-            const itemMap = new Map<number, TreeNode>();
-
-            // 创建所有节点的映射
-            items.forEach((item) => {
-                itemMap.set(item.id, item);
-            });
-
-            // 构建树形结构
-            items.forEach((item: { parent_id: number | null; id: number }) => {
-                if (item.parent_id === null) {
-                    const node = itemMap.get(item.id);
-                    if (node) {
-                        node.type = "project";
-                        Object.assign(
-                            treeObj,
-                            filterOutKeys(node, ["parent_id"])
-                        );
-                    }
-                } else {
-                    const parentNode = itemMap.get(item.parent_id);
-                    if (parentNode) {
-                        const childNode = {
-                            ...itemMap.get(item.id),
-                            type: "dir",
-                        };
-                        parentNode.children.push(
-                            filterOutKeys(childNode, ["parent_id"])
-                        );
-                    }
+        items.forEach((item: { parent_id: null; id: any }) => {
+            if (item.parent_id === null) {
+                const prevObj = { ...itemMap.get(item.id), type: "project" };
+                treeObj = filterOutKeys(prevObj, ["parent_id"]);
+            } else {
+                const parent = itemMap.get(item.parent_id);
+                if (parent) {
+                    const prevObj = { ...itemMap.get(item.id), type: "dir" };
+                    parent.children.push(filterOutKeys(prevObj, ["parent_id"]));
                 }
-            });
+            }
+        });
 
-            return treeObj;
-        }
-
-        return buildTree(totalData);
-    } catch (error) {
-        console.error("Error building configs tree:", error);
-        return null;
+        return treeObj;
     }
+
+    return buildTree(totalData);
 }
 
 async function getCategoryById(categoryId: number): Promise<Http.ResDirectory> {
