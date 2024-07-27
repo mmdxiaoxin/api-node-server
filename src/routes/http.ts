@@ -36,7 +36,7 @@ router.post("/config/add", (req: Request, res: Response) => {
 router.post("/config", async (req: Request, res: Response) => {
     try {
         const query = req.body as { apiId: string };
-        const data = await getApiConfigDetails(query.apiId);
+        const data = await getApiConfigDetails(parseInt(query.apiId));
         res.json({ code: 200, data, message: "获取成功" });
     } catch (err) {
         console.error(err);
@@ -74,7 +74,7 @@ router.post("/directory", async (req: Request, res: Response) => {
     try {
         const query = req.body as { directoryId: string };
         const categoryId = query.directoryId;
-        const data = await getCategoryById(categoryId);
+        const data = await getCategoryById(parseInt(categoryId));
         res.json({ code: 200, data, message: "获取成功" });
     } catch (err) {
         console.error(err);

@@ -20,38 +20,10 @@ interface Config {
 }
 
 interface TreeItem extends Category {
+    parent_id: number | null;
+    type: string;
     configs: Config[];
     children: TreeItem[];
-}
-
-interface ApiRequestDetails {
-    id: number;
-    method: string;
-    api_url: string;
-    api_auth: string;
-    body_json?: object;
-    body_xml?: string;
-    body_raw?: string;
-}
-
-interface QueryParam {
-    param_name: string;
-    param_value: string;
-}
-
-interface QueryHeader {
-    header_name: string;
-    header_value: string;
-}
-
-interface QueryBodyForm {
-    field_name: string;
-    field_value: string;
-}
-
-interface QueryBodyFormX {
-    field_name: string;
-    field_value: string;
 }
 
 /**
@@ -59,8 +31,8 @@ interface QueryBodyFormX {
  * @param projectId
  * @returns {Promise<Object>}
  */
-async function buildConfigsTree(projectId: number): Promise<object> {
-    const categoryData: Category[] = (
+async function buildConfigsTree(projectId: number): Promise<TreeItem | null> {
+    const categoryData = (
         await ApiCategory.findAll({ where: { project_id: projectId } })
     ).map((cat) => filterOutKeys(cat.dataValues, ["project_id"]));
 
@@ -70,7 +42,14 @@ async function buildConfigsTree(projectId: number): Promise<object> {
         const configs: Config[] = (
             await ApiConfig.findAll({ where: { category_id: category.id } })
         ).map((config) => config.dataValues);
-        totalData.push({ ...category, configs, children: [] });
+        totalData.push({
+            id: category.id || 0,
+            ...category,
+            configs,
+            children: [],
+            type: "",
+            parent_id: null,
+        });
     }
 
     function buildTree(items: TreeItem[]): TreeItem | null {
@@ -136,7 +115,7 @@ async function getCategoryById(categoryId: number): Promise<object> {
     }
 }
 
-async function getApiConfigDetails(apiConfigId: number): Promise<object> {
+async function getApiConfigDetails(apiConfigId: number) {
     try {
         const apiConfig = await ApiConfig.findByPk(apiConfigId);
 
@@ -144,55 +123,55 @@ async function getApiConfigDetails(apiConfigId: number): Promise<object> {
             throw new Error("ApiConfig not found");
         }
 
-        const apiRequest = (await ApiRequest.findOne({
+        const apiRequest = await ApiRequest.findOne({
             where: { api_id: apiConfigId },
-        })) as ApiRequestDetails;
-        const queryParams = await RequestParam.findAll({
-            where: { request_id: apiRequest.id },
         });
-        const queryHeaders = await ApiHeader.findAll({
-            where: { request_id: apiRequest.id },
-        });
-        const queryBodyForm = await RequestBodyForm.findAll({
-            where: { request_id: apiRequest.id },
-        });
-        const queryBodyFormX = await RequestBodyFormX.findAll({
-            where: { request_id: apiRequest.id },
-        });
-
-        const result = {
-            name: apiConfig.api_name,
-            requestMethod: apiRequest.method,
-            apiUrl: apiRequest.api_url,
-            authType: apiRequest.api_auth,
-            queryParams: queryParams.map((param: QueryParam) => ({
-                key: param.param_name,
-                value: param.param_value,
-                description: "Query Parameter",
-            })),
-            queryHeaders: queryHeaders.map((header: QueryHeader) => ({
-                key: header.header_name,
-                value: header.header_value,
-                description: "Query Header",
-            })),
-            queryBodyForm: queryBodyForm.map((form: QueryBodyForm) => ({
-                key: form.field_name,
-                value: form.field_value,
-                description: "Query Body Form",
-            })),
-            queryBodyFormX: queryBodyFormX.map((formX: QueryBodyFormX) => ({
-                key: formX.field_name,
-                value: formX.field_value,
-                description: "Query Body FormX",
-            })),
-            queryJsonBody: apiRequest.body_json
-                ? JSON.stringify(apiRequest.body_json)
-                : "",
-            queryXmlBody: apiRequest.body_xml,
-            queryRawBody: apiRequest.body_raw,
-        };
-
-        return result;
+        if (apiRequest) {
+            const queryParams = await RequestParam.findAll({
+                where: { request_id: apiRequest.id },
+            });
+            const queryHeaders = await ApiHeader.findAll({
+                where: { request_id: apiRequest.id },
+            });
+            const queryBodyForm = await RequestBodyForm.findAll({
+                where: { request_id: apiRequest.id },
+            });
+            const queryBodyFormX = await RequestBodyFormX.findAll({
+                where: { request_id: apiRequest.id },
+            });
+            const result = {
+                name: apiConfig.api_name,
+                requestMethod: apiRequest.method,
+                apiUrl: apiRequest.api_url,
+                authType: apiRequest.api_auth,
+                queryParams: queryParams.map((param: RequestParam) => ({
+                    key: param.param_name,
+                    value: param.param_value,
+                    description: "Query Parameter",
+                })),
+                queryHeaders: queryHeaders.map((header) => ({
+                    key: header.header_name,
+                    value: header.header_value,
+                    description: "Query Header",
+                })),
+                queryBodyForm: queryBodyForm.map((form) => ({
+                    key: form.field_name,
+                    value: form.field_value,
+                    description: "Query Body Form",
+                })),
+                queryBodyFormX: queryBodyFormX.map((formX) => ({
+                    key: formX.field_name,
+                    value: formX.field_value,
+                    description: "Query Body FormX",
+                })),
+                queryJsonBody: apiRequest.body_json
+                    ? JSON.stringify(apiRequest.body_json)
+                    : "",
+                queryXmlBody: apiRequest.body_xml,
+                queryRawBody: apiRequest.body_raw,
+            };
+            return result;
+        }
     } catch (error) {
         console.error("Error fetching ApiConfig details:", error);
         throw error;
