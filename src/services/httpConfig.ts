@@ -17,9 +17,9 @@ async function buildConfigsTree(
     projectId: number
 ): Promise<Http.ResTree | null> {
     // 查询指定项目的目录
-    const categoryData = await ApiCategory.findAll({
-        where: { project_id: projectId },
-    });
+    const categoryData = (
+        await ApiCategory.findAll({ where: { project_id: projectId } })
+    ).map((cat) => filterOutKeys(cat.dataValues, ["project_id"]));
 
     const totalData = [];
 
