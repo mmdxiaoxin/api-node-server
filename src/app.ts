@@ -6,9 +6,6 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { Request, Response, NextFunction } from "express";
 
-// 引入mockjs
-import Mock from "mockjs";
-
 // 引入路由模块
 import userRoutes from "./routes/user";
 import projectRoutes from "./routes/project";

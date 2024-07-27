@@ -60,7 +60,7 @@ router.post(
     ) => {
         try {
             const query = req.body as { projectId: string };
-            const projectId = parseInt(query.projectId, 10);
+            const projectId = parseInt(query.projectId);
             const tree = await buildConfigsTree(projectId);
             res.json({ code: "200", data: tree, msg: "获取成功" });
         } catch (err) {
