@@ -56,7 +56,7 @@
 
 ### 如何使用
 
-- 启动服务器：在终端中执行 `node app.js` 或使用npm脚本启动。
+- 启动服务器：在终端中执行 `npm run dev` 可开启热部署，或者`npm run build`之后使用`npm run start`启动服务器。
 - 开发者可通过调用上述接口进行模拟测试或集成到前端应用中。
 - `sequelize-auto -o "./src/models" -d achs -h localhost -u 数据库账号 -p 数据库端口 -x 数据库密码 -e mysql -l ts`可以快速生成数据库模型
 
