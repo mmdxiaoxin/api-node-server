@@ -1,14 +1,16 @@
 import { filterOutKeys } from "../utils";
-import { api_category as ApiCategory } from "../models/api_category";
-import { api_config as ApiConfig } from "../models/api_config";
-import { api_request as ApiRequest } from "../models/api_request";
-import { api_response as ApiResponse } from "../models/api_response";
-import { api_header as ApiHeader } from "../models/api_header";
-import { request_body_form as RequestBodyForm } from "../models/request_body_form";
-import { request_body_form_x as RequestBodyFormX } from "../models/request_body_form_x";
-import { request_param as RequestParam } from "../models/request_param";
-import { achs_user as AchsUser } from "../models/achs_user";
 import { Http } from "../interface";
+import models from "../models";
+
+const {
+    api_category: ApiCategory,
+    api_config: ApiConfig,
+    api_request: ApiRequest,
+    request_param: RequestParam,
+    api_header: ApiHeader,
+    request_body_form: RequestBodyForm,
+    request_body_form_x: RequestBodyFormX,
+} = models;
 
 // TODO: 类型待校验
 async function buildConfigsTree(
@@ -16,7 +18,7 @@ async function buildConfigsTree(
 ): Promise<Http.ResTree | null> {
     // 查询指定项目的目录
     const categoryData = await ApiCategory.findAll({
-        where: { project_id: "1" },
+        where: { project_id: projectId },
     });
 
     const totalData = [];
@@ -122,7 +124,7 @@ async function getApiConfigDetails(
                 requestMethod: apiRequest.method,
                 apiUrl: apiRequest.api_url,
                 authType: apiRequest.api_auth,
-                queryParams: queryParams.map((param: RequestParam) => ({
+                queryParams: queryParams.map((param) => ({
                     key: param.param_name,
                     value: param.param_value,
                     description: "Query Parameter",
