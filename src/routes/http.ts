@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import {
-    buildTree,
+    buildConfigsTree,
     getCategoryById,
     getApiConfigDetails,
 } from "../services/httpConfig";
@@ -38,7 +38,7 @@ router.post(
     "/config",
     async (
         req: Request,
-        res: Response<Result | ResultData<Http.ResConfig>>
+        res: Response<Result | ResultData<Http.ResConfig | null>>
     ) => {
         try {
             const query = req.body as { apiId: string };
@@ -54,11 +54,14 @@ router.post(
 // 接口项目列表
 router.post(
     "/tree/list",
-    async (req: Request, res: Response<Result | ResultData<Http.ResTree>>) => {
+    async (
+        req: Request,
+        res: Response<Result | ResultData<Http.ResTree | null>>
+    ) => {
         try {
             const query = req.body as { projectId: string };
             const projectId = parseInt(query.projectId, 10);
-            const tree = await buildTree(projectId);
+            const tree = await buildConfigsTree(projectId);
             res.json({ code: "200", data: tree, msg: "获取成功" });
         } catch (err) {
             console.error(err);
@@ -84,7 +87,7 @@ router.post(
     "/directory",
     async (
         req: Request,
-        res: Response<ResultData<Http.ResDirectory> | Result>
+        res: Response<ResultData<Http.ResDirectory | null> | Result>
     ) => {
         try {
             const query = req.body as { directoryId: string };
