@@ -1,10 +1,15 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "esModuleInterop": true,
         "target": "es6",
-        "rootDir": "./",
-        "outDir": "./build",
-        "strict": true
-    }
+        "module": "commonjs",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "resolveJsonModule": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
 }
