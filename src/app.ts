@@ -13,6 +13,7 @@ import mockRoutes from "./routes/mock";
 import httpRoutes from "./routes/http";
 import indexRoutes from "./routes/index";
 import teamRoutes from "./routes/team";
+import testRoutes from "./routes/test";
 
 // 创建服务器
 const app = express();
@@ -31,6 +32,7 @@ app.use("/api-control-hub/project", projectRoutes);
 app.use("/api-control-hub/mock", mockRoutes);
 app.use("/api-control-hub/http", httpRoutes);
 app.use("/api-control-hub/team", teamRoutes);
+app.use("/api-control-hub/test", testRoutes);
 
 // 捕获404并转发到错误处理程序
 app.use((req: Request, res: Response, next: NextFunction) => {
