@@ -14,7 +14,7 @@ export interface api_headerAttributes {
 
 export type api_headerPk = "id";
 export type api_headerId = api_header[api_headerPk];
-export type api_headerOptionalAttributes = "request_id" | "response_id" | "header_name" | "header_value" | "description";
+export type api_headerOptionalAttributes = "id" | "request_id" | "response_id" | "header_name" | "header_value" | "description";
 export type api_headerCreationAttributes = Optional<api_headerAttributes, api_headerOptionalAttributes>;
 
 export class api_header extends Model<api_headerAttributes, api_headerCreationAttributes> implements api_headerAttributes {
@@ -39,6 +39,7 @@ export class api_header extends Model<api_headerAttributes, api_headerCreationAt
   static initModel(sequelize: Sequelize.Sequelize): typeof api_header {
     return api_header.init({
     id: {
+      autoIncrement: true,
       type: DataTypes.BIGINT,
       allowNull: false,
       primaryKey: true

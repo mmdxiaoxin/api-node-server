@@ -127,12 +127,12 @@ async function getApiConfigDetails(
                 queryParams: queryParams.map((param) => ({
                     key: param.param_name,
                     value: param.param_value,
-                    description: "Query Parameter",
+                    description: param.param_description,
                 })),
                 queryHeaders: queryHeaders.map((header) => ({
                     key: header.header_name,
                     value: header.header_value,
-                    description: "Query Header",
+                    description: header.description,
                 })),
                 queryBodyForm: queryBodyForm.map((form) => ({
                     key: form.field_name,
@@ -160,4 +160,115 @@ async function getApiConfigDetails(
     }
 }
 
-export { buildConfigsTree, getCategoryById, getApiConfigDetails };
+type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
+
+async function updateApiConfigDetails(config: Http.ReqUpdate) {
+    try {
+        const apiConfig = await ApiConfig.findByPk(config.apiId);
+        if (!apiConfig) {
+            throw new Error("ApiConfig not found");
+        }
+
+        const apiRequest = await ApiRequest.findOne({
+            where: { api_id: config.apiId },
+        });
+
+        if (apiRequest) {
+            const queryParams = await RequestParam.findAll({
+                where: { request_id: apiRequest.id },
+            });
+
+            const queryHeaders = await ApiHeader.findAll({
+                where: { request_id: apiRequest.id },
+            });
+
+            const queryBodyForm = await RequestBodyForm.findAll({
+                where: { request_id: apiRequest.id },
+            });
+
+            const queryBodyFormX = await RequestBodyFormX.findAll({
+                where: { request_id: apiRequest.id },
+            });
+
+            // Update api config
+            await apiRequest.update({
+                method: config.requestMethod as Method,
+                api_url: config.apiUrl,
+                api_auth: config.authType,
+                body_json: config.queryJsonBody
+                    ? JSON.parse(config.queryJsonBody)
+                    : null,
+                body_xml: config.queryXmlBody,
+                body_raw: config.queryRawBody,
+            });
+
+            // Update query params
+            for (const param of queryParams) {
+                await param.destroy();
+            }
+            if (config.queryParams) {
+                for (const param of config.queryParams) {
+                    await RequestParam.create({
+                        request_id: apiRequest.id,
+                        param_name: param.key,
+                        param_value: param.value,
+                        param_description: param.description,
+                    });
+                }
+            }
+
+            // Update query headers
+            for (const header of queryHeaders) {
+                await header.destroy();
+            }
+            if (config.queryHeaders) {
+                for (const header of config.queryHeaders) {
+                    await ApiHeader.create({
+                        request_id: apiRequest.id,
+                        header_name: header.key,
+                        header_value: header.value,
+                        description: header.description,
+                    });
+                }
+            }
+
+            // Update query body form
+            for (const form of queryBodyForm) {
+                await form.destroy();
+            }
+            if (config.queryBodyForm) {
+                for (const form of config.queryBodyForm) {
+                    await RequestBodyForm.create({
+                        request_id: apiRequest.id,
+                        field_name: form.key,
+                        field_value: form.value,
+                    });
+                }
+            }
+
+            // Update query body form x
+            for (const formX of queryBodyFormX) {
+                await formX.destroy();
+            }
+            if (config.queryBodyFormX) {
+                for (const formX of config.queryBodyFormX) {
+                    await RequestBodyFormX.create({
+                        request_id: apiRequest.id,
+                        field_name: formX.key,
+                        field_value: formX.value,
+                    });
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Error updating ApiConfig details:", error);
+        throw error;
+    }
+}
+
+export {
+    buildConfigsTree,
+    getCategoryById,
+    getApiConfigDetails,
+    updateApiConfigDetails,
+};

@@ -226,6 +226,26 @@ export namespace Http {
         description: string;
     }
 
+    export interface ReqUpdate {
+        name?: string;
+        requestMethod?: string;
+        apiId: number;
+        apiUrl?: string;
+        authType?: string;
+        queryParams?: QueryParam[];
+        queryHeaders?: QueryHeader[];
+        queryBodyForm?: QueryBodyForm[];
+        queryBodyFormX?: QueryBodyFormX[];
+        queryJsonBody?: string;
+        queryXmlBody?: string;
+        queryRawBody?: string;
+        creator?: string;
+    }
+
+    export interface ReqAdd {
+        name: string;
+    }
+
     export interface ResConfig {
         name: string;
         requestMethod: string;

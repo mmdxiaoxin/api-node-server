@@ -3,6 +3,7 @@ import {
     buildConfigsTree,
     getCategoryById,
     getApiConfigDetails,
+    updateApiConfigDetails,
 } from "../services/httpConfig";
 import { Http, Result, ResultData } from "../interface";
 
@@ -16,9 +17,16 @@ router.post("/delete", (req: Request, res: Response<Result>) => {
 });
 
 // 项目接口更新
-router.post("/config/update", (req: Request, res: Response<Result>) => {
+router.post("/config/update", async (req: Request, res: Response<Result>) => {
     // 实现项目接口更新的逻辑
-    res.json({ code: 200, msg: "更新成功" });
+    try {
+        const data = req.body as Http.ReqUpdate;
+        await updateApiConfigDetails(data);
+        res.json({ code: 200, msg: "更新成功" });
+    } catch (err) {
+        console.error(err);
+        res.json({ code: 500, msg: "更新失败" });
+    }
 });
 
 // 项目接口删除

@@ -7,12 +7,13 @@ export interface request_paramAttributes {
   request_id?: number;
   param_name: string;
   param_value?: string;
+  param_description?: string;
   create_time?: Date;
 }
 
 export type request_paramPk = "id";
 export type request_paramId = request_param[request_paramPk];
-export type request_paramOptionalAttributes = "id" | "request_id" | "param_value" | "create_time";
+export type request_paramOptionalAttributes = "id" | "request_id" | "param_value" | "param_description" | "create_time";
 export type request_paramCreationAttributes = Optional<request_paramAttributes, request_paramOptionalAttributes>;
 
 export class request_param extends Model<request_paramAttributes, request_paramCreationAttributes> implements request_paramAttributes {
@@ -20,6 +21,7 @@ export class request_param extends Model<request_paramAttributes, request_paramC
   request_id?: number;
   param_name!: string;
   param_value?: string;
+  param_description?: string;
   create_time?: Date;
 
   // request_param belongsTo api_request via request_id
@@ -50,6 +52,10 @@ export class request_param extends Model<request_paramAttributes, request_paramC
     },
     param_value: {
       type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    param_description: {
+      type: DataTypes.TEXT,
       allowNull: true
     },
     create_time: {
