@@ -244,6 +244,7 @@ export namespace Http {
 
     export interface ReqAdd {
         name: string;
+        categoryId?: number;
     }
 
     export interface ResConfig {

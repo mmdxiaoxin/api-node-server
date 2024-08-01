@@ -43,12 +43,12 @@ async function buildConfigsTree(
         items.forEach((item: { parent_id: null; id: any }) => {
             if (item.parent_id === null) {
                 const prevObj = { ...itemMap.get(item.id), type: "project" };
-                treeObj = filterOutKeys(prevObj, ["parent_id"]);
+                treeObj = prevObj;
             } else {
                 const parent = itemMap.get(item.parent_id);
                 if (parent) {
                     const prevObj = { ...itemMap.get(item.id), type: "dir" };
-                    parent.children.push(filterOutKeys(prevObj, ["parent_id"]));
+                    parent.children.push(prevObj);
                 }
             }
         });
@@ -266,9 +266,29 @@ async function updateApiConfigDetails(config: Http.ReqUpdate) {
     }
 }
 
+async function addApiConfigDetails(config: Http.ReqAdd) {
+    try {
+        const apiConfig = await ApiConfig.create({
+            api_name: config.name,
+            category_id: config.categoryId,
+        });
+
+        const apiRequest = await ApiRequest.create({
+            api_id: apiConfig.id,
+            method: "GET",
+            api_url: "",
+            api_auth: "None",
+        });
+    } catch (error) {
+        console.error("Error adding ApiConfig details:", error);
+        throw error;
+    }
+}
+
 export {
     buildConfigsTree,
     getCategoryById,
     getApiConfigDetails,
     updateApiConfigDetails,
+    addApiConfigDetails,
 };

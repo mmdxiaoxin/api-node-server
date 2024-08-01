@@ -4,6 +4,7 @@ import {
     getCategoryById,
     getApiConfigDetails,
     updateApiConfigDetails,
+    addApiConfigDetails,
 } from "../services/httpConfig";
 import { Http, Result, ResultData } from "../interface";
 
@@ -36,9 +37,16 @@ router.post("/config/delete", (req: Request, res: Response<Result>) => {
 });
 
 // 项目接口添加
-router.post("/config/add", (req: Request, res: Response<Result>) => {
+router.post("/config/add", async (req: Request, res: Response<Result>) => {
     // 实现项目接口添加的逻辑
-    res.json({ code: 200, msg: "添加成功" });
+    try {
+        const data = req.body as Http.ReqAdd;
+        await addApiConfigDetails(data);
+        res.json({ code: 200, msg: "添加成功" });
+    } catch (err) {
+        console.error(err);
+        res.json({ code: 500, msg: "添加失败" });
+    }
 });
 
 // 获取接口配置项
