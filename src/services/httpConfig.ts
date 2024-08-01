@@ -1,6 +1,8 @@
 import { filterOutKeys } from "../utils";
 import { Http } from "../interface";
 import models from "../models";
+import { Transaction } from "sequelize";
+import sequelize from "../config/database";
 
 const {
     api_category: ApiCategory,
@@ -163,106 +165,167 @@ async function getApiConfigDetails(
 type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
 
 async function updateApiConfigDetails(config: Http.ReqUpdate) {
+    const transaction = await sequelize.transaction();
     try {
-        const apiConfig = await ApiConfig.findByPk(config.apiId);
+        const apiConfig = await ApiConfig.findByPk(config.apiId, {
+            transaction,
+        });
         if (!apiConfig) {
             throw new Error("ApiConfig not found");
         }
 
+        await apiConfig.update(
+            {
+                api_name: config.name,
+                category_id: config.categoryId,
+            },
+            { transaction }
+        );
+
         const apiRequest = await ApiRequest.findOne({
             where: { api_id: config.apiId },
+            transaction,
         });
 
         if (apiRequest) {
-            const queryParams = await RequestParam.findAll({
-                where: { request_id: apiRequest.id },
-            });
+            // Update api request
+            await apiRequest.update(
+                {
+                    method: config.requestMethod as Method,
+                    api_url: config.apiUrl,
+                    api_auth: config.authType,
+                    body_json: config.queryJsonBody
+                        ? JSON.parse(config.queryJsonBody)
+                        : null,
+                    body_xml: config.queryXmlBody,
+                    body_raw: config.queryRawBody,
+                },
+                { transaction }
+            );
 
-            const queryHeaders = await ApiHeader.findAll({
-                where: { request_id: apiRequest.id },
-            });
-
-            const queryBodyForm = await RequestBodyForm.findAll({
-                where: { request_id: apiRequest.id },
-            });
-
-            const queryBodyFormX = await RequestBodyFormX.findAll({
-                where: { request_id: apiRequest.id },
-            });
-
-            // Update api config
-            await apiRequest.update({
-                method: config.requestMethod as Method,
-                api_url: config.apiUrl,
-                api_auth: config.authType,
-                body_json: config.queryJsonBody
-                    ? JSON.parse(config.queryJsonBody)
-                    : null,
-                body_xml: config.queryXmlBody,
-                body_raw: config.queryRawBody,
-            });
+            // 获取现有的查询参数、请求头、表单数据
+            const [queryParams, queryHeaders, queryBodyForm, queryBodyFormX] =
+                await Promise.all([
+                    RequestParam.findAll({
+                        where: { request_id: apiRequest.id },
+                        transaction,
+                    }),
+                    ApiHeader.findAll({
+                        where: { request_id: apiRequest.id },
+                        transaction,
+                    }),
+                    RequestBodyForm.findAll({
+                        where: { request_id: apiRequest.id },
+                        transaction,
+                    }),
+                    RequestBodyFormX.findAll({
+                        where: { request_id: apiRequest.id },
+                        transaction,
+                    }),
+                ]);
 
             // Update query params
-            for (const param of queryParams) {
-                await param.destroy();
-            }
-            if (config.queryParams) {
-                for (const param of config.queryParams) {
-                    await RequestParam.create({
-                        request_id: apiRequest.id,
-                        param_name: param.key,
-                        param_value: param.value,
-                        param_description: param.description,
-                    });
-                }
-            }
+            await updateOrCreateEntries(
+                RequestParam,
+                queryParams,
+                config.queryParams,
+                apiRequest.id,
+                transaction,
+                "param_name",
+                "param_value",
+                "param_description"
+            );
 
             // Update query headers
-            for (const header of queryHeaders) {
-                await header.destroy();
-            }
-            if (config.queryHeaders) {
-                for (const header of config.queryHeaders) {
-                    await ApiHeader.create({
-                        request_id: apiRequest.id,
-                        header_name: header.key,
-                        header_value: header.value,
-                        description: header.description,
-                    });
-                }
-            }
+            await updateOrCreateEntries(
+                ApiHeader,
+                queryHeaders,
+                config.queryHeaders,
+                apiRequest.id,
+                transaction,
+                "header_name",
+                "header_value",
+                "description"
+            );
 
             // Update query body form
-            for (const form of queryBodyForm) {
-                await form.destroy();
-            }
-            if (config.queryBodyForm) {
-                for (const form of config.queryBodyForm) {
-                    await RequestBodyForm.create({
-                        request_id: apiRequest.id,
-                        field_name: form.key,
-                        field_value: form.value,
-                    });
-                }
-            }
+            await updateOrCreateEntries(
+                RequestBodyForm,
+                queryBodyForm,
+                config.queryBodyForm,
+                apiRequest.id,
+                transaction,
+                "field_name",
+                "field_value"
+            );
 
             // Update query body form x
-            for (const formX of queryBodyFormX) {
-                await formX.destroy();
-            }
-            if (config.queryBodyFormX) {
-                for (const formX of config.queryBodyFormX) {
-                    await RequestBodyFormX.create({
-                        request_id: apiRequest.id,
-                        field_name: formX.key,
-                        field_value: formX.value,
-                    });
-                }
-            }
+            await updateOrCreateEntries(
+                RequestBodyFormX,
+                queryBodyFormX,
+                config.queryBodyFormX,
+                apiRequest.id,
+                transaction,
+                "field_name",
+                "field_value"
+            );
         }
+
+        await transaction.commit();
     } catch (error) {
+        await transaction.rollback();
         console.error("Error updating ApiConfig details:", error);
         throw error;
+    }
+}
+
+async function updateOrCreateEntries<T extends { [key: string]: any }>(
+    model: any,
+    existingEntries: T[],
+    newEntries:
+        | { key: string; value: string; description?: string }[]
+        | undefined,
+    requestId: number,
+    transaction: Transaction,
+    keyField: string,
+    valueField: string,
+    descriptionField?: string
+) {
+    if (!newEntries) return;
+
+    const newEntriesMap = new Map(
+        newEntries.map((entry) => [entry.key, entry])
+    );
+
+    // 更新或删除现有条目
+    for (const entry of existingEntries) {
+        const newEntry = newEntriesMap.get(entry[keyField]);
+        if (newEntry) {
+            const updateData: { [key: string]: any } = {
+                [keyField]: newEntry.key,
+                [valueField]: newEntry.value,
+            };
+            if (descriptionField && newEntry.description) {
+                updateData[descriptionField] = newEntry.description;
+            }
+            await entry.update(updateData, { transaction });
+            newEntriesMap.delete(newEntry.key);
+        } else {
+            await entry.destroy({ transaction });
+        }
+    }
+
+    // 创建新条目
+    for (const newEntry of newEntriesMap.values()) {
+        const createData: { [key: string]: any } = {
+            request_id: requestId,
+            [keyField]: newEntry.key,
+            [valueField]: newEntry.value,
+        };
+        if (descriptionField && newEntry.description) {
+            createData[descriptionField] = newEntry.description;
+        }
+        await model.create(createData, { transaction });
     }
 }
 

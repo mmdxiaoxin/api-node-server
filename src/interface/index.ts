@@ -228,6 +228,7 @@ export namespace Http {
 
     export interface ReqUpdate {
         name?: string;
+        categoryId: number;
         requestMethod?: string;
         apiId: number;
         apiUrl?: string;
