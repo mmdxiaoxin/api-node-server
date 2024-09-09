@@ -1,8 +1,8 @@
-import { filterOutKeys } from "../utils";
-import { Http } from "../interface";
-import models from "../models";
-import { Transaction } from "sequelize";
-import sequelize from "../config/database";
+import { filterOutKeys } from '../utils';
+import { Http } from '../interface';
+import models from '../models';
+import { Transaction } from 'sequelize';
+import sequelize from '../config/database';
 
 const {
     api_category: ApiCategory,
@@ -15,21 +15,19 @@ const {
 } = models;
 
 // TODO: 类型待校验
-async function buildConfigsTree(
-    projectId: number
-): Promise<Http.ResTree | null> {
+async function buildConfigsTree(projectId: number): Promise<Http.ResTree | null> {
     // 查询指定项目的目录
-    const categoryData = (
-        await ApiCategory.findAll({ where: { project_id: projectId } })
-    ).map((cat) => filterOutKeys(cat.dataValues, ["project_id"]));
+    const categoryData = (await ApiCategory.findAll({ where: { project_id: projectId } })).map((cat) =>
+        filterOutKeys(cat.dataValues, ['project_id'])
+    );
 
     const totalData = [];
 
     // 查询每个目录下的接口并合并
     for (const category of categoryData) {
-        const configs = (
-            await ApiConfig.findAll({ where: { category_id: category.id } })
-        ).map((config) => config.dataValues);
+        const configs = (await ApiConfig.findAll({ where: { category_id: category.id } })).map(
+            (config) => config.dataValues
+        );
         totalData.push({ ...category, configs });
     }
 
@@ -44,12 +42,12 @@ async function buildConfigsTree(
 
         items.forEach((item: { parent_id: null; id: any }) => {
             if (item.parent_id === null) {
-                const prevObj = { ...itemMap.get(item.id), type: "project" };
+                const prevObj = { ...itemMap.get(item.id), type: 'project' };
                 treeObj = prevObj;
             } else {
                 const parent = itemMap.get(item.parent_id);
                 if (parent) {
-                    const prevObj = { ...itemMap.get(item.id), type: "dir" };
+                    const prevObj = { ...itemMap.get(item.id), type: 'dir' };
                     parent.children.push(prevObj);
                 }
             }
@@ -65,7 +63,7 @@ async function getCategoryById(categoryId: number): Promise<Http.ResDirectory> {
     try {
         const category = await ApiCategory.findByPk(categoryId);
         if (!category) {
-            throw new Error("Category not found");
+            throw new Error('Category not found');
         }
 
         const apis = await ApiConfig.findAll({
@@ -73,7 +71,7 @@ async function getCategoryById(categoryId: number): Promise<Http.ResDirectory> {
         });
 
         const result = {
-            directoryName: category.category_name || "",
+            directoryName: category.category_name || '',
             children: await Promise.all(
                 apis.map(async (api) => {
                     const request = await ApiRequest.findOne({
@@ -81,8 +79,8 @@ async function getCategoryById(categoryId: number): Promise<Http.ResDirectory> {
                     });
                     return {
                         id: api.id.toString(),
-                        name: api.api_name || "",
-                        method: request ? request.method : "Unknown",
+                        name: api.api_name || '',
+                        method: request ? request.method : 'Unknown',
                     };
                 })
             ),
@@ -90,19 +88,17 @@ async function getCategoryById(categoryId: number): Promise<Http.ResDirectory> {
 
         return result;
     } catch (error) {
-        console.error("Error fetching category by id:", error);
+        console.error('Error fetching category by id:', error);
         throw error;
     }
 }
 
-async function getApiConfigDetails(
-    apiConfigId: number
-): Promise<Http.ResConfig> {
+async function getApiConfigDetails(apiConfigId: number): Promise<Http.ResConfig> {
     try {
         const apiConfig = await ApiConfig.findByPk(apiConfigId);
 
         if (!apiConfig) {
-            throw new Error("ApiConfig not found");
+            throw new Error('ApiConfig not found');
         }
 
         const apiRequest = await ApiRequest.findOne({
@@ -139,16 +135,14 @@ async function getApiConfigDetails(
                 queryBodyForm: queryBodyForm.map((form) => ({
                     key: form.field_name,
                     value: form.field_value,
-                    description: "Query Body Form",
+                    description: 'Query Body Form',
                 })),
                 queryBodyFormX: queryBodyFormX.map((formX) => ({
                     key: formX.field_name,
                     value: formX.field_value,
-                    description: "Query Body FormX",
+                    description: 'Query Body FormX',
                 })),
-                queryJsonBody: apiRequest.body_json
-                    ? JSON.stringify(apiRequest.body_json)
-                    : "",
+                queryJsonBody: apiRequest.body_json ? JSON.stringify(apiRequest.body_json) : '',
                 queryXmlBody: apiRequest.body_xml,
                 queryRawBody: apiRequest.body_raw,
             };
@@ -157,12 +151,12 @@ async function getApiConfigDetails(
         }
         return {} as Http.ResConfig;
     } catch (error) {
-        console.error("Error fetching ApiConfig details:", error);
+        console.error('Error fetching ApiConfig details:', error);
         throw error;
     }
 }
 
-type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS";
+type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 
 async function updateApiConfigDetails(config: Http.ReqUpdate) {
     const transaction = await sequelize.transaction();
@@ -171,7 +165,7 @@ async function updateApiConfigDetails(config: Http.ReqUpdate) {
             transaction,
         });
         if (!apiConfig) {
-            throw new Error("ApiConfig not found");
+            throw new Error('ApiConfig not found');
         }
 
         await apiConfig.update(
@@ -194,9 +188,7 @@ async function updateApiConfigDetails(config: Http.ReqUpdate) {
                     method: config.requestMethod as Method,
                     api_url: config.apiUrl,
                     api_auth: config.authType,
-                    body_json: config.queryJsonBody
-                        ? JSON.parse(config.queryJsonBody)
-                        : null,
+                    body_json: config.queryJsonBody ? JSON.parse(config.queryJsonBody) : null,
                     body_xml: config.queryXmlBody,
                     body_raw: config.queryRawBody,
                 },
@@ -204,25 +196,24 @@ async function updateApiConfigDetails(config: Http.ReqUpdate) {
             );
 
             // 获取现有的查询参数、请求头、表单数据
-            const [queryParams, queryHeaders, queryBodyForm, queryBodyFormX] =
-                await Promise.all([
-                    RequestParam.findAll({
-                        where: { request_id: apiRequest.id },
-                        transaction,
-                    }),
-                    ApiHeader.findAll({
-                        where: { request_id: apiRequest.id },
-                        transaction,
-                    }),
-                    RequestBodyForm.findAll({
-                        where: { request_id: apiRequest.id },
-                        transaction,
-                    }),
-                    RequestBodyFormX.findAll({
-                        where: { request_id: apiRequest.id },
-                        transaction,
-                    }),
-                ]);
+            const [queryParams, queryHeaders, queryBodyForm, queryBodyFormX] = await Promise.all([
+                RequestParam.findAll({
+                    where: { request_id: apiRequest.id },
+                    transaction,
+                }),
+                ApiHeader.findAll({
+                    where: { request_id: apiRequest.id },
+                    transaction,
+                }),
+                RequestBodyForm.findAll({
+                    where: { request_id: apiRequest.id },
+                    transaction,
+                }),
+                RequestBodyFormX.findAll({
+                    where: { request_id: apiRequest.id },
+                    transaction,
+                }),
+            ]);
 
             // Update query params
             await updateOrCreateEntries(
@@ -231,9 +222,9 @@ async function updateApiConfigDetails(config: Http.ReqUpdate) {
                 config.queryParams,
                 apiRequest.id,
                 transaction,
-                "param_name",
-                "param_value",
-                "param_description"
+                'param_name',
+                'param_value',
+                'param_description'
             );
 
             // Update query headers
@@ -243,9 +234,9 @@ async function updateApiConfigDetails(config: Http.ReqUpdate) {
                 config.queryHeaders,
                 apiRequest.id,
                 transaction,
-                "header_name",
-                "header_value",
-                "description"
+                'header_name',
+                'header_value',
+                'description'
             );
 
             // Update query body form
@@ -255,8 +246,8 @@ async function updateApiConfigDetails(config: Http.ReqUpdate) {
                 config.queryBodyForm,
                 apiRequest.id,
                 transaction,
-                "field_name",
-                "field_value"
+                'field_name',
+                'field_value'
             );
 
             // Update query body form x
@@ -266,15 +257,15 @@ async function updateApiConfigDetails(config: Http.ReqUpdate) {
                 config.queryBodyFormX,
                 apiRequest.id,
                 transaction,
-                "field_name",
-                "field_value"
+                'field_name',
+                'field_value'
             );
         }
 
         await transaction.commit();
     } catch (error) {
         await transaction.rollback();
-        console.error("Error updating ApiConfig details:", error);
+        console.error('Error updating ApiConfig details:', error);
         throw error;
     }
 }
@@ -282,9 +273,7 @@ async function updateApiConfigDetails(config: Http.ReqUpdate) {
 async function updateOrCreateEntries<T extends { [key: string]: any }>(
     model: any,
     existingEntries: T[],
-    newEntries:
-        | { key: string; value: string; description?: string }[]
-        | undefined,
+    newEntries: { key: string; value: string; description?: string }[] | undefined,
     requestId: number,
     transaction: Transaction,
     keyField: string,
@@ -293,9 +282,7 @@ async function updateOrCreateEntries<T extends { [key: string]: any }>(
 ) {
     if (!newEntries) return;
 
-    const newEntriesMap = new Map(
-        newEntries.map((entry) => [entry.key, entry])
-    );
+    const newEntriesMap = new Map(newEntries.map((entry) => [entry.key, entry]));
 
     // 更新或删除现有条目
     for (const entry of existingEntries) {
@@ -336,14 +323,67 @@ async function addApiConfigDetails(config: Http.ReqAdd) {
             category_id: config.categoryId,
         });
 
-        const apiRequest = await ApiRequest.create({
+        await ApiRequest.create({
             api_id: apiConfig.id,
-            method: "GET",
-            api_url: "",
-            api_auth: "None",
+            method: 'GET',
+            api_url: '',
+            api_auth: 'None',
         });
     } catch (error) {
-        console.error("Error adding ApiConfig details:", error);
+        console.error('Error adding ApiConfig details:', error);
+        throw error;
+    }
+}
+
+async function deleteApiConfig(apiConfigId: number): Promise<void> {
+    const transaction = await sequelize.transaction();
+    try {
+        // 查找 API 配置
+        const apiConfig = await ApiConfig.findByPk(apiConfigId, { transaction });
+        if (!apiConfig) {
+            throw new Error('ApiConfig not found');
+        }
+
+        // 查找相关的 API 请求信息
+        const apiRequest = await ApiRequest.findOne({
+            where: { api_id: apiConfigId },
+            transaction,
+        });
+
+        if (apiRequest) {
+            // 删除相关的请求参数、请求头、表单数据
+            await Promise.all([
+                RequestParam.destroy({
+                    where: { request_id: apiRequest.id },
+                    transaction,
+                }),
+                ApiHeader.destroy({
+                    where: { request_id: apiRequest.id },
+                    transaction,
+                }),
+                RequestBodyForm.destroy({
+                    where: { request_id: apiRequest.id },
+                    transaction,
+                }),
+                RequestBodyFormX.destroy({
+                    where: { request_id: apiRequest.id },
+                    transaction,
+                }),
+            ]);
+
+            // 删除 API 请求
+            await apiRequest.destroy({ transaction });
+        }
+
+        // 删除 API 配置
+        await apiConfig.destroy({ transaction });
+
+        // 提交事务
+        await transaction.commit();
+    } catch (error) {
+        // 如果发生错误，回滚事务
+        await transaction.rollback();
+        console.error('Error deleting ApiConfig:', error);
         throw error;
     }
 }
@@ -354,4 +394,5 @@ export {
     getApiConfigDetails,
     updateApiConfigDetails,
     addApiConfigDetails,
+    deleteApiConfig,
 };
