@@ -10,7 +10,6 @@ export interface achs_userAttributes {
   id: number;
   username: string;
   password: string;
-  salt?: string;
   avatar?: string;
   phone?: string;
   email?: string;
@@ -22,14 +21,13 @@ export interface achs_userAttributes {
 
 export type achs_userPk = "id";
 export type achs_userId = achs_user[achs_userPk];
-export type achs_userOptionalAttributes = "id" | "salt" | "avatar" | "phone" | "email" | "gender" | "description" | "created_at" | "updated_at";
+export type achs_userOptionalAttributes = "id" | "avatar" | "phone" | "email" | "gender" | "description" | "created_at" | "updated_at";
 export type achs_userCreationAttributes = Optional<achs_userAttributes, achs_userOptionalAttributes>;
 
 export class achs_user extends Model<achs_userAttributes, achs_userCreationAttributes> implements achs_userAttributes {
   id!: number;
   username!: string;
   password!: string;
-  salt?: string;
   avatar?: string;
   phone?: string;
   email?: string;
@@ -114,10 +112,6 @@ export class achs_user extends Model<achs_userAttributes, achs_userCreationAttri
     password: {
       type: DataTypes.STRING(64),
       allowNull: false
-    },
-    salt: {
-      type: DataTypes.STRING(255),
-      allowNull: true
     },
     avatar: {
       type: DataTypes.TEXT,

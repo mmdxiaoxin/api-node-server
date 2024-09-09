@@ -15,11 +15,15 @@ class AuthService {
                 throw new Error('该用户名已经被用户绑定!');
             }
 
+            // 哈希密码，生成盐值
+            const saltRounds = 10;
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+
             // 创建用户
             const newUser = await User.create(
                 {
                     username,
-                    password,
+                    password: hashedPassword,
                 },
                 { transaction }
             );
@@ -38,8 +42,8 @@ class AuthService {
         if (!user) {
             throw new Error('用户不存在');
         }
-
-        const validPassword = user.password === password;
+       
+        const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
             throw new Error('密码错误');
         }
