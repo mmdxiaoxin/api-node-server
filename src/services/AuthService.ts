@@ -31,6 +31,21 @@ class AuthService {
             throw error;
         }
     }
+
+    // 用户登录服务
+    public async login(username: string, password: string) {
+        const user = await User.findOne({ where: { username } });
+        if (!user) {
+            throw new Error('用户不存在');
+        }
+
+        const validPassword = user.password === password;
+        if (!validPassword) {
+            throw new Error('密码错误');
+        }
+
+        return user;
+    }
 }
 
 export default new AuthService();
