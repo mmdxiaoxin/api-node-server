@@ -8,16 +8,13 @@ import type { api_config, api_configId } from './api_config';
 
 export interface achs_userAttributes {
   id: number;
-  name?: string;
-  account?: string;
-  password?: string;
-  password_hash: string;
+  username: string;
+  password: string;
   salt?: string;
   avatar?: string;
   phone?: string;
   email?: string;
   gender?: number;
-  status?: number;
   description?: string;
   created_at?: Date;
   updated_at?: Date;
@@ -25,21 +22,18 @@ export interface achs_userAttributes {
 
 export type achs_userPk = "id";
 export type achs_userId = achs_user[achs_userPk];
-export type achs_userOptionalAttributes = "id" | "name" | "account" | "password" | "salt" | "avatar" | "phone" | "email" | "gender" | "status" | "description" | "created_at" | "updated_at";
+export type achs_userOptionalAttributes = "id" | "salt" | "avatar" | "phone" | "email" | "gender" | "description" | "created_at" | "updated_at";
 export type achs_userCreationAttributes = Optional<achs_userAttributes, achs_userOptionalAttributes>;
 
 export class achs_user extends Model<achs_userAttributes, achs_userCreationAttributes> implements achs_userAttributes {
   id!: number;
-  name?: string;
-  account?: string;
-  password?: string;
-  password_hash!: string;
+  username!: string;
+  password!: string;
   salt?: string;
   avatar?: string;
   phone?: string;
   email?: string;
   gender?: number;
-  status?: number;
   description?: string;
   created_at?: Date;
   updated_at?: Date;
@@ -113,20 +107,12 @@ export class achs_user extends Model<achs_userAttributes, achs_userCreationAttri
       allowNull: false,
       primaryKey: true
     },
-    name: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
-    account: {
-      type: DataTypes.STRING(50),
-      allowNull: true
+    username: {
+      type: DataTypes.STRING(64),
+      allowNull: false
     },
     password: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    password_hash: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(64),
       allowNull: false
     },
     salt: {
@@ -134,27 +120,23 @@ export class achs_user extends Model<achs_userAttributes, achs_userCreationAttri
       allowNull: true
     },
     avatar: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.TEXT,
       allowNull: true
     },
     phone: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(64),
       allowNull: true
     },
     email: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(255),
       allowNull: true
     },
     gender: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    status: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.TINYINT,
       allowNull: true
     },
     description: {
-      type: DataTypes.STRING(500),
+      type: DataTypes.TEXT,
       allowNull: true
     }
   }, {
