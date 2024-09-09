@@ -35,7 +35,7 @@ router.post("/login", (req: Request, res: Response) => {
     const body = req.body as { username: string; password: string };
     if (
         body.username === "admin" &&
-        body.password === "e10adc3949ba59abbe56e057f20f883e"
+        body.password === "123456"
     ) {
         res.json({
             code: 200,
@@ -44,7 +44,7 @@ router.post("/login", (req: Request, res: Response) => {
         });
     } else if (
         body.username === "user" &&
-        body.password === "e10adc3949ba59abbe56e057f20f883e"
+        body.password === "123456"
     ) {
         res.json({
             code: 200,
