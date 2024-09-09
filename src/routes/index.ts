@@ -2,11 +2,13 @@ import express, { Request, Response } from "express";
 import localMenu from "../static/localMenu.json";
 import localAuth from "../static/localAuth.json";
 import Mock from "mockjs";
+import { Register } from "../interface";
 const router = express.Router();
 
 // 注册
 router.post("/register", (req: Request, res: Response) => {
     // 实现用户注册的逻辑
+    const body = req.body as Register.ReqRegisterForm;
     res.json({ code: 200, msg: "注册成功" });
 });
 
