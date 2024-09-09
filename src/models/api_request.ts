@@ -16,11 +16,13 @@ export interface api_requestAttributes {
   body_json?: object;
   body_xml?: string;
   body_raw?: string;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export type api_requestPk = "id";
 export type api_requestId = api_request[api_requestPk];
-export type api_requestOptionalAttributes = "id" | "api_id" | "api_url" | "base_url" | "api_auth" | "body_json" | "body_xml" | "body_raw";
+export type api_requestOptionalAttributes = "id" | "api_id" | "api_url" | "base_url" | "api_auth" | "body_json" | "body_xml" | "body_raw" | "created_at" | "updated_at";
 export type api_requestCreationAttributes = Optional<api_requestAttributes, api_requestOptionalAttributes>;
 
 export class api_request extends Model<api_requestAttributes, api_requestCreationAttributes> implements api_requestAttributes {
@@ -33,6 +35,8 @@ export class api_request extends Model<api_requestAttributes, api_requestCreatio
   body_json?: object;
   body_xml?: string;
   body_raw?: string;
+  created_at?: Date;
+  updated_at?: Date;
 
   // api_request belongsTo api_config via api_id
   api!: api_config;
@@ -135,7 +139,7 @@ export class api_request extends Model<api_requestAttributes, api_requestCreatio
   }, {
     sequelize,
     tableName: 'api_request',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",

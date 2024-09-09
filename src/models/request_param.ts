@@ -8,12 +8,13 @@ export interface request_paramAttributes {
   param_name: string;
   param_value?: string;
   param_description?: string;
-  create_time?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export type request_paramPk = "id";
 export type request_paramId = request_param[request_paramPk];
-export type request_paramOptionalAttributes = "id" | "request_id" | "param_value" | "param_description" | "create_time";
+export type request_paramOptionalAttributes = "id" | "request_id" | "param_value" | "param_description" | "created_at" | "updated_at";
 export type request_paramCreationAttributes = Optional<request_paramAttributes, request_paramOptionalAttributes>;
 
 export class request_param extends Model<request_paramAttributes, request_paramCreationAttributes> implements request_paramAttributes {
@@ -22,7 +23,8 @@ export class request_param extends Model<request_paramAttributes, request_paramC
   param_name!: string;
   param_value?: string;
   param_description?: string;
-  create_time?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 
   // request_param belongsTo api_request via request_id
   request!: api_request;
@@ -57,15 +59,11 @@ export class request_param extends Model<request_paramAttributes, request_paramC
     param_description: {
       type: DataTypes.TEXT,
       allowNull: true
-    },
-    create_time: {
-      type: DataTypes.DATE,
-      allowNull: true
     }
   }, {
     sequelize,
     tableName: 'request_param',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",

@@ -3,10 +3,18 @@ import { achs_menu as _achs_menu } from "./achs_menu";
 import type { achs_menuAttributes, achs_menuCreationAttributes } from "./achs_menu";
 import { achs_mock as _achs_mock } from "./achs_mock";
 import type { achs_mockAttributes, achs_mockCreationAttributes } from "./achs_mock";
+import { achs_permissions as _achs_permissions } from "./achs_permissions";
+import type { achs_permissionsAttributes, achs_permissionsCreationAttributes } from "./achs_permissions";
 import { achs_project as _achs_project } from "./achs_project";
 import type { achs_projectAttributes, achs_projectCreationAttributes } from "./achs_project";
 import { achs_recent as _achs_recent } from "./achs_recent";
 import type { achs_recentAttributes, achs_recentCreationAttributes } from "./achs_recent";
+import { achs_roles as _achs_roles } from "./achs_roles";
+import type { achs_rolesAttributes, achs_rolesCreationAttributes } from "./achs_roles";
+import { achs_roles_permissions as _achs_roles_permissions } from "./achs_roles_permissions";
+import type { achs_roles_permissionsAttributes, achs_roles_permissionsCreationAttributes } from "./achs_roles_permissions";
+import { achs_roles_team as _achs_roles_team } from "./achs_roles_team";
+import type { achs_roles_teamAttributes, achs_roles_teamCreationAttributes } from "./achs_roles_team";
 import { achs_star as _achs_star } from "./achs_star";
 import type { achs_starAttributes, achs_starCreationAttributes } from "./achs_star";
 import { achs_team as _achs_team } from "./achs_team";
@@ -37,8 +45,12 @@ import type { system_logsAttributes, system_logsCreationAttributes } from "./sys
 export {
   _achs_menu as achs_menu,
   _achs_mock as achs_mock,
+  _achs_permissions as achs_permissions,
   _achs_project as achs_project,
   _achs_recent as achs_recent,
+  _achs_roles as achs_roles,
+  _achs_roles_permissions as achs_roles_permissions,
+  _achs_roles_team as achs_roles_team,
   _achs_star as achs_star,
   _achs_team as achs_team,
   _achs_team_user as achs_team_user,
@@ -59,10 +71,18 @@ export type {
   achs_menuCreationAttributes,
   achs_mockAttributes,
   achs_mockCreationAttributes,
+  achs_permissionsAttributes,
+  achs_permissionsCreationAttributes,
   achs_projectAttributes,
   achs_projectCreationAttributes,
   achs_recentAttributes,
   achs_recentCreationAttributes,
+  achs_rolesAttributes,
+  achs_rolesCreationAttributes,
+  achs_roles_permissionsAttributes,
+  achs_roles_permissionsCreationAttributes,
+  achs_roles_teamAttributes,
+  achs_roles_teamCreationAttributes,
   achs_starAttributes,
   achs_starCreationAttributes,
   achs_teamAttributes,
@@ -94,8 +114,12 @@ export type {
 export function initModels(sequelize: Sequelize) {
   const achs_menu = _achs_menu.initModel(sequelize);
   const achs_mock = _achs_mock.initModel(sequelize);
+  const achs_permissions = _achs_permissions.initModel(sequelize);
   const achs_project = _achs_project.initModel(sequelize);
   const achs_recent = _achs_recent.initModel(sequelize);
+  const achs_roles = _achs_roles.initModel(sequelize);
+  const achs_roles_permissions = _achs_roles_permissions.initModel(sequelize);
+  const achs_roles_team = _achs_roles_team.initModel(sequelize);
   const achs_star = _achs_star.initModel(sequelize);
   const achs_team = _achs_team.initModel(sequelize);
   const achs_team_user = _achs_team_user.initModel(sequelize);
@@ -112,6 +136,8 @@ export function initModels(sequelize: Sequelize) {
 
   achs_menu.belongsTo(achs_menu, { as: "parent", foreignKey: "parent_id"});
   achs_menu.hasMany(achs_menu, { as: "achs_menus", foreignKey: "parent_id"});
+  achs_roles_permissions.belongsTo(achs_permissions, { as: "permission", foreignKey: "permission_id"});
+  achs_permissions.hasMany(achs_roles_permissions, { as: "achs_roles_permissions", foreignKey: "permission_id"});
   achs_mock.belongsTo(achs_project, { as: "project", foreignKey: "project_id"});
   achs_project.hasMany(achs_mock, { as: "achs_mocks", foreignKey: "project_id"});
   achs_recent.belongsTo(achs_project, { as: "project", foreignKey: "project_id"});
@@ -120,8 +146,16 @@ export function initModels(sequelize: Sequelize) {
   achs_project.hasMany(achs_star, { as: "achs_stars", foreignKey: "project_id"});
   api_category.belongsTo(achs_project, { as: "project", foreignKey: "project_id"});
   achs_project.hasMany(api_category, { as: "api_categories", foreignKey: "project_id"});
+  achs_roles_permissions.belongsTo(achs_roles, { as: "role", foreignKey: "role_id"});
+  achs_roles.hasMany(achs_roles_permissions, { as: "achs_roles_permissions", foreignKey: "role_id"});
+  achs_roles_team.belongsTo(achs_roles, { as: "role", foreignKey: "role_id"});
+  achs_roles.hasMany(achs_roles_team, { as: "achs_roles_teams", foreignKey: "role_id"});
+  achs_team_user.belongsTo(achs_roles, { as: "role", foreignKey: "role_id"});
+  achs_roles.hasMany(achs_team_user, { as: "achs_team_users", foreignKey: "role_id"});
   achs_project.belongsTo(achs_team, { as: "team", foreignKey: "team_id"});
   achs_team.hasMany(achs_project, { as: "achs_projects", foreignKey: "team_id"});
+  achs_roles_team.belongsTo(achs_team, { as: "team", foreignKey: "team_id"});
+  achs_team.hasMany(achs_roles_team, { as: "achs_roles_teams", foreignKey: "team_id"});
   achs_team_user.belongsTo(achs_team, { as: "team", foreignKey: "team_id"});
   achs_team.hasMany(achs_team_user, { as: "achs_team_users", foreignKey: "team_id"});
   achs_menu.belongsTo(achs_user, { as: "user", foreignKey: "user_id"});
@@ -156,8 +190,12 @@ export function initModels(sequelize: Sequelize) {
   return {
     achs_menu: achs_menu,
     achs_mock: achs_mock,
+    achs_permissions: achs_permissions,
     achs_project: achs_project,
     achs_recent: achs_recent,
+    achs_roles: achs_roles,
+    achs_roles_permissions: achs_roles_permissions,
+    achs_roles_team: achs_roles_team,
     achs_star: achs_star,
     achs_team: achs_team,
     achs_team_user: achs_team_user,

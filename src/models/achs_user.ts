@@ -18,12 +18,13 @@ export interface achs_userAttributes {
   gender?: number;
   status?: number;
   description?: string;
-  create_time?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export type achs_userPk = "id";
 export type achs_userId = achs_user[achs_userPk];
-export type achs_userOptionalAttributes = "id" | "name" | "account" | "password" | "salt" | "avatar" | "phone" | "email" | "gender" | "status" | "description" | "create_time";
+export type achs_userOptionalAttributes = "id" | "name" | "account" | "password" | "salt" | "avatar" | "phone" | "email" | "gender" | "status" | "description" | "created_at" | "updated_at";
 export type achs_userCreationAttributes = Optional<achs_userAttributes, achs_userOptionalAttributes>;
 
 export class achs_user extends Model<achs_userAttributes, achs_userCreationAttributes> implements achs_userAttributes {
@@ -38,7 +39,8 @@ export class achs_user extends Model<achs_userAttributes, achs_userCreationAttri
   gender?: number;
   status?: number;
   description?: string;
-  create_time?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 
   // achs_user hasMany achs_menu via user_id
   achs_menus!: achs_menu[];
@@ -148,15 +150,11 @@ export class achs_user extends Model<achs_userAttributes, achs_userCreationAttri
     description: {
       type: DataTypes.STRING(500),
       allowNull: true
-    },
-    create_time: {
-      type: DataTypes.DATE,
-      allowNull: true
     }
   }, {
     sequelize,
     tableName: 'achs_user',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",

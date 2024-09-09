@@ -10,11 +10,13 @@ export interface api_headerAttributes {
   header_name?: string;
   header_value?: string;
   description?: string;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export type api_headerPk = "id";
 export type api_headerId = api_header[api_headerPk];
-export type api_headerOptionalAttributes = "id" | "request_id" | "response_id" | "header_name" | "header_value" | "description";
+export type api_headerOptionalAttributes = "id" | "request_id" | "response_id" | "header_name" | "header_value" | "description" | "created_at" | "updated_at";
 export type api_headerCreationAttributes = Optional<api_headerAttributes, api_headerOptionalAttributes>;
 
 export class api_header extends Model<api_headerAttributes, api_headerCreationAttributes> implements api_headerAttributes {
@@ -24,6 +26,8 @@ export class api_header extends Model<api_headerAttributes, api_headerCreationAt
   header_name?: string;
   header_value?: string;
   description?: string;
+  created_at?: Date;
+  updated_at?: Date;
 
   // api_header belongsTo api_request via request_id
   request!: api_request;
@@ -75,7 +79,7 @@ export class api_header extends Model<api_headerAttributes, api_headerCreationAt
   }, {
     sequelize,
     tableName: 'api_header',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",

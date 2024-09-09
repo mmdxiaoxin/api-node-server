@@ -8,11 +8,13 @@ export interface request_body_formAttributes {
   field_name?: string;
   field_type?: string;
   field_value?: string;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export type request_body_formPk = "id";
 export type request_body_formId = request_body_form[request_body_formPk];
-export type request_body_formOptionalAttributes = "id" | "request_id" | "field_name" | "field_type" | "field_value";
+export type request_body_formOptionalAttributes = "id" | "request_id" | "field_name" | "field_type" | "field_value" | "created_at" | "updated_at";
 export type request_body_formCreationAttributes = Optional<request_body_formAttributes, request_body_formOptionalAttributes>;
 
 export class request_body_form extends Model<request_body_formAttributes, request_body_formCreationAttributes> implements request_body_formAttributes {
@@ -21,6 +23,8 @@ export class request_body_form extends Model<request_body_formAttributes, reques
   field_name?: string;
   field_type?: string;
   field_value?: string;
+  created_at?: Date;
+  updated_at?: Date;
 
   // request_body_form belongsTo api_request via request_id
   request!: api_request;
@@ -59,7 +63,7 @@ export class request_body_form extends Model<request_body_formAttributes, reques
   }, {
     sequelize,
     tableName: 'request_body_form',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",

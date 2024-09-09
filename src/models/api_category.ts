@@ -8,12 +8,13 @@ export interface api_categoryAttributes {
   project_id?: number;
   category_name?: string;
   parent_id?: number;
-  create_time?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export type api_categoryPk = "id";
 export type api_categoryId = api_category[api_categoryPk];
-export type api_categoryOptionalAttributes = "id" | "project_id" | "category_name" | "parent_id" | "create_time";
+export type api_categoryOptionalAttributes = "id" | "project_id" | "category_name" | "parent_id" | "created_at" | "updated_at";
 export type api_categoryCreationAttributes = Optional<api_categoryAttributes, api_categoryOptionalAttributes>;
 
 export class api_category extends Model<api_categoryAttributes, api_categoryCreationAttributes> implements api_categoryAttributes {
@@ -21,7 +22,8 @@ export class api_category extends Model<api_categoryAttributes, api_categoryCrea
   project_id?: number;
   category_name?: string;
   parent_id?: number;
-  create_time?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 
   // api_category belongsTo achs_project via project_id
   project!: achs_project;
@@ -73,15 +75,11 @@ export class api_category extends Model<api_categoryAttributes, api_categoryCrea
         model: 'api_category',
         key: 'id'
       }
-    },
-    create_time: {
-      type: DataTypes.DATE,
-      allowNull: true
     }
   }, {
     sequelize,
     tableName: 'api_category',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",

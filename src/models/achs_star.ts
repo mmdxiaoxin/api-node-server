@@ -7,19 +7,21 @@ export interface achs_starAttributes {
   id: number;
   creator_id?: number;
   project_id?: number;
-  create_time?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export type achs_starPk = "id";
 export type achs_starId = achs_star[achs_starPk];
-export type achs_starOptionalAttributes = "id" | "creator_id" | "project_id" | "create_time";
+export type achs_starOptionalAttributes = "id" | "creator_id" | "project_id" | "created_at" | "updated_at";
 export type achs_starCreationAttributes = Optional<achs_starAttributes, achs_starOptionalAttributes>;
 
 export class achs_star extends Model<achs_starAttributes, achs_starCreationAttributes> implements achs_starAttributes {
   id!: number;
   creator_id?: number;
   project_id?: number;
-  create_time?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 
   // achs_star belongsTo achs_project via project_id
   project!: achs_project;
@@ -55,15 +57,11 @@ export class achs_star extends Model<achs_starAttributes, achs_starCreationAttri
         model: 'achs_project',
         key: 'id'
       }
-    },
-    create_time: {
-      type: DataTypes.DATE,
-      allowNull: true
     }
   }, {
     sequelize,
     tableName: 'achs_star',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",

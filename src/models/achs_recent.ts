@@ -7,19 +7,21 @@ export interface achs_recentAttributes {
   id: number;
   creator_id?: number;
   project_id?: number;
-  create_time?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export type achs_recentPk = "id";
 export type achs_recentId = achs_recent[achs_recentPk];
-export type achs_recentOptionalAttributes = "id" | "creator_id" | "project_id" | "create_time";
+export type achs_recentOptionalAttributes = "id" | "creator_id" | "project_id" | "created_at" | "updated_at";
 export type achs_recentCreationAttributes = Optional<achs_recentAttributes, achs_recentOptionalAttributes>;
 
 export class achs_recent extends Model<achs_recentAttributes, achs_recentCreationAttributes> implements achs_recentAttributes {
   id!: number;
   creator_id?: number;
   project_id?: number;
-  create_time?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 
   // achs_recent belongsTo achs_project via project_id
   project!: achs_project;
@@ -55,15 +57,11 @@ export class achs_recent extends Model<achs_recentAttributes, achs_recentCreatio
         model: 'achs_project',
         key: 'id'
       }
-    },
-    create_time: {
-      type: DataTypes.DATE,
-      allowNull: true
     }
   }, {
     sequelize,
     tableName: 'achs_recent',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",
