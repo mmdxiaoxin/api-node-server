@@ -59,7 +59,6 @@ export namespace Register {
     export interface ReqRegisterForm {
         username: string;
         password: string;
-        confirm: string;
     }
 }
 
