@@ -11,6 +11,7 @@ export interface achs_userAttributes {
   name?: string;
   account?: string;
   password?: string;
+  password_hash: string;
   salt?: string;
   avatar?: string;
   phone?: string;
@@ -32,6 +33,7 @@ export class achs_user extends Model<achs_userAttributes, achs_userCreationAttri
   name?: string;
   account?: string;
   password?: string;
+  password_hash!: string;
   salt?: string;
   avatar?: string;
   phone?: string;
@@ -122,6 +124,10 @@ export class achs_user extends Model<achs_userAttributes, achs_userCreationAttri
     password: {
       type: DataTypes.STRING(255),
       allowNull: true
+    },
+    password_hash: {
+      type: DataTypes.STRING(255),
+      allowNull: false
     },
     salt: {
       type: DataTypes.STRING(255),
