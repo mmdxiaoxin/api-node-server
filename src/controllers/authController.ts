@@ -3,7 +3,7 @@ import { Login, Register, Result, ResultData } from '../interface';
 import AuthService from '../services/AuthService';
 
 class AuthController {
-    public async register(req: Request<null, Register.ReqRegisterForm>, res: Response<Result>) {
+    public async register(req: Request<{}, Register.ReqRegisterForm>, res: Response<Result>) {
         const { username, password } = req.body;
 
         try {
@@ -14,7 +14,7 @@ class AuthController {
         }
     }
 
-    public async login(req: Request<null, Login.ReqLoginForm>, res: Response<ResultData<Login.ResLogin> | Result>) {
+    public async login(req: Request<{}, Login.ReqLoginForm>, res: Response<ResultData<Login.ResLogin> | Result>) {
         const { username, password } = req.body;
 
         try {

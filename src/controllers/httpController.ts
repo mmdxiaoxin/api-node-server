@@ -10,7 +10,7 @@ import {
 } from '../services/HttpService';
 
 class HttpController {
-    public async delete(req: Request<null, { apiId: number }>, res: Response<Result>) {
+    public async delete(req: Request<{}, { apiId: number }>, res: Response<Result>) {
         try {
             const data = req.body;
             await deleteApiConfig(data.apiId);
@@ -21,7 +21,7 @@ class HttpController {
         }
     }
 
-    public async update(req: Request<null, Http.ReqUpdate>, res: Response<Result>) {
+    public async update(req: Request<{}, Http.ReqUpdate>, res: Response<Result>) {
         try {
             const data = req.body;
             await updateApiConfigDetails(data);
@@ -32,7 +32,7 @@ class HttpController {
         }
     }
 
-    public async add(req: Request<null, Http.ReqAdd>, res: Response<Result>) {
+    public async add(req: Request<{}, Http.ReqAdd>, res: Response<Result>) {
         try {
             const data = req.body;
             await addApiConfigDetails(data);
@@ -44,7 +44,7 @@ class HttpController {
     }
 
     public async config(
-        req: Request<null, { apiId: string }>,
+        req: Request<{}, { apiId: string }>,
         res: Response<Result | ResultData<Http.ResConfig | null>>
     ) {
         try {
@@ -58,7 +58,7 @@ class HttpController {
     }
 
     public async list(
-        req: Request<null, { projectId: string }>,
+        req: Request<{}, { projectId: string }>,
         res: Response<Result | ResultData<Http.ResTree | null>>
     ) {
         try {
@@ -73,7 +73,7 @@ class HttpController {
     }
 
     public async directory(
-        req: Request<null, { directoryId: string }>,
+        req: Request<{}, { directoryId: string }>,
         res: Response<ResultData<Http.ResDirectory | null> | Result>
     ) {
         try {

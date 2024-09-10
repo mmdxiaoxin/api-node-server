@@ -6,10 +6,10 @@ import localMenu from '../static/localMenu.json';
 const router = express.Router();
 
 // 注册
-router.post('/register', authController.register);
+router.post('/register', (req, res) => authController.register(req, res));
 
 // 用户登录
-router.post('/login', authController.login);
+router.post('/login', (req, res) => authController.login(req, res));
 
 // 用户菜单
 router.get('/menu/list', (req: Request, res: Response) => {
