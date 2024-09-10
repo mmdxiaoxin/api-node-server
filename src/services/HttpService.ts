@@ -5,19 +5,19 @@ import { Transaction } from 'sequelize';
 import sequelize from '../config/database';
 
 const {
-    api_category: ApiCategory,
-    api_config: ApiConfig,
-    api_request: ApiRequest,
-    request_param: RequestParam,
-    api_header: ApiHeader,
-    request_body_form: RequestBodyForm,
-    request_body_form_x: RequestBodyFormX,
+    api_category,
+    api_config,
+    api_request,
+    request_param,
+    api_header,
+    request_body_form,
+    request_body_form_x,
 } = models;
 
 // TODO: 类型待校验
 async function buildConfigsTree(projectId: number): Promise<Http.ResTree | null> {
     // 查询指定项目的目录
-    const categoryData = (await ApiCategory.findAll({ where: { project_id: projectId } })).map((cat) =>
+    const categoryData = (await api_category.findAll({ where: { project_id: projectId } })).map((cat) =>
         filterOutKeys(cat.dataValues, ['project_id'])
     );
 
@@ -25,7 +25,7 @@ async function buildConfigsTree(projectId: number): Promise<Http.ResTree | null>
 
     // 查询每个目录下的接口并合并
     for (const category of categoryData) {
-        const configs = (await ApiConfig.findAll({ where: { category_id: category.id } })).map(
+        const configs = (await api_config.findAll({ where: { category_id: category.id } })).map(
             (config) => config.dataValues
         );
         totalData.push({ ...category, configs });
@@ -61,12 +61,12 @@ async function buildConfigsTree(projectId: number): Promise<Http.ResTree | null>
 
 async function getCategoryById(categoryId: number): Promise<Http.ResDirectory> {
     try {
-        const category = await ApiCategory.findByPk(categoryId);
+        const category = await api_category.findByPk(categoryId);
         if (!category) {
             throw new Error('Category not found');
         }
 
-        const apis = await ApiConfig.findAll({
+        const apis = await api_config.findAll({
             where: { category_id: categoryId },
         });
 
@@ -74,7 +74,7 @@ async function getCategoryById(categoryId: number): Promise<Http.ResDirectory> {
             directoryName: category.category_name || '',
             children: await Promise.all(
                 apis.map(async (api) => {
-                    const request = await ApiRequest.findOne({
+                    const request = await api_request.findOne({
                         where: { api_id: api.id },
                     });
                     return {
@@ -95,26 +95,26 @@ async function getCategoryById(categoryId: number): Promise<Http.ResDirectory> {
 
 async function getApiConfigDetails(apiConfigId: number): Promise<Http.ResConfig> {
     try {
-        const apiConfig = await ApiConfig.findByPk(apiConfigId);
+        const apiConfig = await api_config.findByPk(apiConfigId);
 
         if (!apiConfig) {
             throw new Error('ApiConfig not found');
         }
 
-        const apiRequest = await ApiRequest.findOne({
+        const apiRequest = await api_request.findOne({
             where: { api_id: apiConfigId },
         });
         if (apiRequest) {
-            const queryParams = await RequestParam.findAll({
+            const queryParams = await request_param.findAll({
                 where: { request_id: apiRequest.id },
             });
-            const queryHeaders = await ApiHeader.findAll({
+            const queryHeaders = await api_header.findAll({
                 where: { request_id: apiRequest.id },
             });
-            const queryBodyForm = await RequestBodyForm.findAll({
+            const queryBodyForm = await request_body_form.findAll({
                 where: { request_id: apiRequest.id },
             });
-            const queryBodyFormX = await RequestBodyFormX.findAll({
+            const queryBodyFormX = await request_body_form_x.findAll({
                 where: { request_id: apiRequest.id },
             });
             const result = {
@@ -161,105 +161,110 @@ type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 async function updateApiConfigDetails(config: Http.ReqUpdate) {
     const transaction = await sequelize.transaction();
     try {
-        const apiConfig = await ApiConfig.findByPk(config.apiId, {
+        const apiConfig = await api_config.findByPk(config.apiId, {
             transaction,
         });
         if (!apiConfig) {
             throw new Error('ApiConfig not found');
         }
 
-        await apiConfig.update(
-            {
-                api_name: config.name,
-                category_id: config.categoryId,
-            },
-            { transaction }
-        );
+        // 只更新存在的字段
+        const updatedConfigFields: Partial<typeof apiConfig> = {};
+        if (config.name) updatedConfigFields.api_name = config.name;
+        if (config.categoryId) updatedConfigFields.category_id = config.categoryId;
 
-        const apiRequest = await ApiRequest.findOne({
+        await apiConfig.update(updatedConfigFields, { transaction });
+
+        const apiRequest = await api_request.findOne({
             where: { api_id: config.apiId },
             transaction,
         });
 
         if (apiRequest) {
-            // Update api request
-            await apiRequest.update(
-                {
-                    method: config.requestMethod as Method,
-                    api_url: config.apiUrl,
-                    api_auth: config.authType,
-                    body_json: config.queryJsonBody ? JSON.parse(config.queryJsonBody) : null,
-                    body_xml: config.queryXmlBody,
-                    body_raw: config.queryRawBody,
-                },
-                { transaction }
-            );
+            // 只更新存在的字段
+            const updatedRequestFields: Partial<typeof apiRequest> = {};
+            if (config.requestMethod) updatedRequestFields.method = config.requestMethod as Method;
+            if (config.apiUrl) updatedRequestFields.api_url = config.apiUrl;
+            if (config.authType) updatedRequestFields.api_auth = config.authType;
+            if (config.queryJsonBody) updatedRequestFields.body_json = JSON.parse(config.queryJsonBody);
+            if (config.queryXmlBody) updatedRequestFields.body_xml = config.queryXmlBody;
+            if (config.queryRawBody) updatedRequestFields.body_raw = config.queryRawBody;
+
+            // Update api request only if there are fields to update
+            if (Object.keys(updatedRequestFields).length > 0) {
+                await apiRequest.update(updatedRequestFields, { transaction });
+            }
 
             // 获取现有的查询参数、请求头、表单数据
             const [queryParams, queryHeaders, queryBodyForm, queryBodyFormX] = await Promise.all([
-                RequestParam.findAll({
+                request_param.findAll({
                     where: { request_id: apiRequest.id },
                     transaction,
                 }),
-                ApiHeader.findAll({
+                api_header.findAll({
                     where: { request_id: apiRequest.id },
                     transaction,
                 }),
-                RequestBodyForm.findAll({
+                request_body_form.findAll({
                     where: { request_id: apiRequest.id },
                     transaction,
                 }),
-                RequestBodyFormX.findAll({
+                request_body_form_x.findAll({
                     where: { request_id: apiRequest.id },
                     transaction,
                 }),
             ]);
 
-            // Update query params
-            await updateOrCreateEntries(
-                RequestParam,
-                queryParams,
-                config.queryParams,
-                apiRequest.id,
-                transaction,
-                'param_name',
-                'param_value',
-                'param_description'
-            );
+            // 更新时只处理存在的字段
+            if (config.queryParams) {
+                await updateOrCreateEntries(
+                    request_param,
+                    queryParams,
+                    config.queryParams,
+                    apiRequest.id,
+                    transaction,
+                    'param_name',
+                    'param_value',
+                    'param_description'
+                );
+            }
 
-            // Update query headers
-            await updateOrCreateEntries(
-                ApiHeader,
-                queryHeaders,
-                config.queryHeaders,
-                apiRequest.id,
-                transaction,
-                'header_name',
-                'header_value',
-                'description'
-            );
+            if (config.queryHeaders) {
+                await updateOrCreateEntries(
+                    api_header,
+                    queryHeaders,
+                    config.queryHeaders,
+                    apiRequest.id,
+                    transaction,
+                    'header_name',
+                    'header_value',
+                    'description'
+                );
+            }
 
-            // Update query body form
-            await updateOrCreateEntries(
-                RequestBodyForm,
-                queryBodyForm,
-                config.queryBodyForm,
-                apiRequest.id,
-                transaction,
-                'field_name',
-                'field_value'
-            );
+            if (config.queryBodyForm) {
+                await updateOrCreateEntries(
+                    request_body_form,
+                    queryBodyForm,
+                    config.queryBodyForm,
+                    apiRequest.id,
+                    transaction,
+                    'field_name',
+                    'field_value'
+                );
+            }
 
-            // Update query body form x
-            await updateOrCreateEntries(
-                RequestBodyFormX,
-                queryBodyFormX,
-                config.queryBodyFormX,
-                apiRequest.id,
-                transaction,
-                'field_name',
-                'field_value'
-            );
+            if (config.queryBodyFormX) {
+                await updateOrCreateEntries(
+                    request_body_form_x,
+                    queryBodyFormX,
+                    config.queryBodyFormX,
+                    apiRequest.id,
+                    transaction,
+                    'field_name',
+                    'field_value'
+                );
+            }
         }
 
         await transaction.commit();
@@ -318,12 +323,12 @@ async function updateOrCreateEntries<T extends { [key: string]: any }>(
 
 async function addApiConfigDetails(config: Http.ReqAdd) {
     try {
-        const apiConfig = await ApiConfig.create({
+        const apiConfig = await api_config.create({
             api_name: config.name,
             category_id: config.categoryId,
         });
 
-        await ApiRequest.create({
+        await api_request.create({
             api_id: apiConfig.id,
             method: 'GET',
             api_url: '',
@@ -339,13 +344,13 @@ async function deleteApiConfig(apiConfigId: number): Promise<void> {
     const transaction = await sequelize.transaction();
     try {
         // 查找 API 配置
-        const apiConfig = await ApiConfig.findByPk(apiConfigId, { transaction });
+        const apiConfig = await api_config.findByPk(apiConfigId, { transaction });
         if (!apiConfig) {
             throw new Error('ApiConfig not found');
         }
 
         // 查找相关的 API 请求信息
-        const apiRequest = await ApiRequest.findOne({
+        const apiRequest = await api_request.findOne({
             where: { api_id: apiConfigId },
             transaction,
         });
@@ -353,19 +358,19 @@ async function deleteApiConfig(apiConfigId: number): Promise<void> {
         if (apiRequest) {
             // 删除相关的请求参数、请求头、表单数据
             await Promise.all([
-                RequestParam.destroy({
+                request_param.destroy({
                     where: { request_id: apiRequest.id },
                     transaction,
                 }),
-                ApiHeader.destroy({
+                api_header.destroy({
                     where: { request_id: apiRequest.id },
                     transaction,
                 }),
-                RequestBodyForm.destroy({
+                request_body_form.destroy({
                     where: { request_id: apiRequest.id },
                     transaction,
                 }),
-                RequestBodyFormX.destroy({
+                request_body_form_x.destroy({
                     where: { request_id: apiRequest.id },
                     transaction,
                 }),
