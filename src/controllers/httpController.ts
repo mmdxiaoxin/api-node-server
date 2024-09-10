@@ -10,9 +10,9 @@ import {
 } from '../services/HttpService';
 
 class HttpController {
-    public async delete(req: Request, res: Response<Result>) {
+    public async delete(req: Request<null, { apiId: number }>, res: Response<Result>) {
         try {
-            const data = req.body as { apiId: number };
+            const data = req.body;
             await deleteApiConfig(data.apiId);
             res.json({ code: 200, msg: '删除成功' });
         } catch (err) {
@@ -21,9 +21,9 @@ class HttpController {
         }
     }
 
-    public async update(req: Request, res: Response<Result>) {
+    public async update(req: Request<null, Http.ReqUpdate>, res: Response<Result>) {
         try {
-            const data = req.body as Http.ReqUpdate;
+            const data = req.body;
             await updateApiConfigDetails(data);
             res.json({ code: 200, msg: '更新成功' });
         } catch (err) {
@@ -32,9 +32,9 @@ class HttpController {
         }
     }
 
-    public async add(req: Request, res: Response<Result>) {
+    public async add(req: Request<null, Http.ReqAdd>, res: Response<Result>) {
         try {
-            const data = req.body as Http.ReqAdd;
+            const data = req.body;
             await addApiConfigDetails(data);
             res.json({ code: 200, msg: '添加成功' });
         } catch (err) {
@@ -43,9 +43,12 @@ class HttpController {
         }
     }
 
-    public async config(req: Request, res: Response<Result | ResultData<Http.ResConfig | null>>) {
+    public async config(
+        req: Request<null, { apiId: string }>,
+        res: Response<Result | ResultData<Http.ResConfig | null>>
+    ) {
         try {
-            const query = req.body as { apiId: string };
+            const query = req.body;
             const data = await getApiConfigDetails(parseInt(query.apiId));
             res.json({ code: 200, data, msg: '获取成功' });
         } catch (err) {
@@ -54,9 +57,12 @@ class HttpController {
         }
     }
 
-    public async list(req: Request, res: Response<Result | ResultData<Http.ResTree | null>>) {
+    public async list(
+        req: Request<null, { projectId: string }>,
+        res: Response<Result | ResultData<Http.ResTree | null>>
+    ) {
         try {
-            const query = req.body as { projectId: string };
+            const query = req.body;
             const projectId = parseInt(query.projectId);
             const tree = await buildConfigsTree(projectId);
             res.json({ code: 200, data: tree, msg: '获取成功' });
@@ -66,9 +72,12 @@ class HttpController {
         }
     }
 
-    public async directory(req: Request, res: Response<ResultData<Http.ResDirectory | null> | Result>) {
+    public async directory(
+        req: Request<null, { directoryId: string }>,
+        res: Response<ResultData<Http.ResDirectory | null> | Result>
+    ) {
         try {
-            const query = req.body as { directoryId: string };
+            const query = req.body;
             const categoryId = query.directoryId;
             const data = await getCategoryById(parseInt(categoryId));
             res.json({ code: 200, data, msg: '获取成功' });
